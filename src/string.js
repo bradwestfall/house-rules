@@ -70,7 +70,7 @@ class StringValidator extends AnyValidator {
   }
 
   minLength(value, minLength) {
-    return (value.length >= minLength) ? '' : 'Must be at least' + minLength + ' characters'
+    return (value.length >= minLength) ? '' : 'Must be at least ' + minLength + ' characters'
   }
 
   regex(value, expression) {

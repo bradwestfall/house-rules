@@ -72,14 +72,21 @@ class AnyValidator {
     // Collect errors
     let errors = []
 
+    // Check Value ( as string )
+    let checkValue = (
+      value === null ||
+      value === undefined ||
+      value.trim() === ''
+      ) ? '' : '' + value
+
     // Check requiredness before all other rules
-    let requiredErrorMessage = this.checkRule(value, 'required')
+    let requiredErrorMessage = this.checkRule(checkValue, 'required')
     if (requiredErrorMessage) return this.formatErrorMessage(key, value, [ requiredErrorMessage ])
 
     // Check everything else
     for (var ruleName in this.rules) {
       if (typeof this[ruleName] === 'function' && ruleName !== 'required') {
-          errors.push(this.checkRule(value, ruleName))
+          errors.push(this.checkRule(checkValue, ruleName))
       }
     }
 

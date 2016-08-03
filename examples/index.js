@@ -1,4 +1,4 @@
-import { Is, Schema, errorFormat } from '../lib'
+import { Is, Schema, errorFormat } from '../src'
 
 // Base Rules
 let id = Is.numeric().positive().integer().required()
@@ -13,11 +13,10 @@ const schema = new Schema({
 })
 
 
-let loginFormSchema = schema.clone(['email', 'password'])
+let loginFormSchema = schema.clone(['password'])
 
 let errors = loginFormSchema.validate({
-  email: 'test@test.com',
-  password: 'somepassword'
+  password: undefined
 })
 
 console.log(errors) // outputs {}
