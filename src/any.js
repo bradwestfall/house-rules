@@ -72,12 +72,8 @@ class AnyValidator {
     // Collect errors
     let errors = []
 
-    // Check Value ( as string )
-    let checkValue = (
-      value === null ||
-      value === undefined ||
-      value.trim() === ''
-      ) ? '' : '' + value
+    // The value which will be checked
+    let checkValue = this.sanitizeValue(value)
 
     // Check requiredness before all other rules
     let requiredErrorMessage = this.checkRule(checkValue, 'required')
@@ -96,6 +92,12 @@ class AnyValidator {
     // Only return errors if some were found
     if (errors.length) return this.formatErrorMessage(key, value, errors)
 
+  }
+
+  sanitizeValue(value) {
+    if (value === null || value === undefined) return ''
+    if (typeof value === 'string') return value.trim()
+    return value + ''
   }
 
   checkRule(value, ruleName) {
