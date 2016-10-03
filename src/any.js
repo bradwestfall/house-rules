@@ -97,12 +97,12 @@ class AnyValidator {
   sanitizeValue(value) {
     if (value === null || value === undefined) return ''
     if (typeof value === 'string') return value.trim()
-    return value + '' // cast string
+    return value + '' // otherwise, cast other values to string
   }
 
   checkRule(value, ruleName) {
     let rule = _.get('this.rules[ruleName].rule') || this.rules[ruleName]
-    let customMessage = _.get('this.rules[ruleName].message')
+    let customMessage = _.get(this, 'rules.' + ruleName + '.message')
     let errorMessage = this[ruleName](value, rule)
     return errorMessage ? (customMessage || errorMessage) : null
   }
