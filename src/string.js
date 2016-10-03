@@ -36,7 +36,7 @@ class StringRule extends AnyRule {
   }
 
   regex(expression, message) {
-    if (typeof expression === 'string') expression = new RegExp(expression)
+    if (typeof expression === 'string') throw new Error('Expressions should be Expression Literals, not Strings')
     if (!(expression instanceof RegExp)) throw new Error('This is not a regular expression')
     return this.setRule('regex', expression, message)
   }

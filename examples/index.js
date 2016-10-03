@@ -9,14 +9,15 @@ const schema = new Schema({
   email: Is.string().email().required(),
   password: Is.string().ascii().minLength(8).maxLength(100),
   userId: id.label('User ID'),
-  userTypeId: Is.numeric().in([1, 2, 3]).required()
+  userTypeId: Is.numeric().in([1, 2, 3]).required(),
+  objectId: Is.string().regex(/^[a-f\d]{24}$/i)
 })
 
 
-let loginFormSchema = schema.clone(['password'])
+let loginFormSchema = schema.clone(['objectId', 'foo'])
 
-let errors = loginFormSchema.validate({
-  password: undefined
-})
+// let errors = loginFormSchema.validate({
+//   objectId: '57dca620517957ca5826bfbb'
+// })
 
-console.log(errors) // outputs {}
+//console.log(errors) // outputs {}

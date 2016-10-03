@@ -34,6 +34,9 @@ class Schema {
   }
 
   clone(keys = []) {
+    keys.forEach(key => {
+      if (!(key in this.schema)) throw new Error(key + ' not found in schema')
+    })
     return new Schema(_.pick(this.schema, keys), Object.assign({}, this.internals))
   }
 

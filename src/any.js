@@ -97,7 +97,7 @@ class AnyValidator {
   sanitizeValue(value) {
     if (value === null || value === undefined) return ''
     if (typeof value === 'string') return value.trim()
-    return value + ''
+    return value + '' // cast string
   }
 
   checkRule(value, ruleName) {

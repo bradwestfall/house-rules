@@ -66,11 +66,11 @@ class NumericValidator extends AnyValidator {
   }
 
   min(value, rule) {
-    return value > rule ? '' : 'Must me bigger than ' + rule
+    return value >= rule ? '' : 'Must me bigger than ' + rule
   }
 
   max(value, rule) {
-    return value < rule ? '' : 'Must me smaller than ' + rule
+    return value <= rule ? '' : 'Must me smaller than ' + rule
   }
 
   positive(value, rule) {
