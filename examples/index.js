@@ -7,7 +7,7 @@ let title = Is.string().length(40).required()
 // Schema Inventory
 const schema = new Schema({
   email: Is.string().email().required(),
-  password: Is.string().ascii('only aski').minLength(8).maxLength(100),
+  password: Is.string().ascii().minLength(8).maxLength(100).required(),
   userId: id.label('User ID'),
   userTypeId: Is.numeric().in([1, 2, 3]).required(),
   objectId: Is.string().regex(/^[a-f\d]{24}$/i)
