@@ -5,6 +5,8 @@ import { StringRule, StringValidator } from './string'
 import Schema from './schema'
 
 const validate = function(values, schema) {
+  if (!values) throw new Error('`values` must be supplied')
+  if (!schema) throw new Error('`schema` must be supplied')
   let rawSchema = schema instanceof Schema ? schema.get() : schema
   let allErrors = {}
 
