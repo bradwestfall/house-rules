@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { titleCase } from './helpers'
+import { camelToLabel } from '../helpers'
 
 /****************************************
   Rule Builder
@@ -15,13 +15,28 @@ class AnyRule {
     this.rules = rules || {}
   }
 
-  hasRule(ruleName) {
+  getRule(ruleName) {
     if (typeof ruleName !== 'string') throw new Error('"ruleName" should be a string')
     return this.rules[ruleName]
   }
 
   toJSON() {
     return this.rules
+  }
+
+
+  /**
+   * Customizing Errors
+   */
+
+  message(message) {
+    if (typeof message !== 'string') throw new Error('"message" should be a string')
+    return this.setRule('message', message)
+  }
+
+  label(label) {
+    if (typeof label !== 'string') throw new Error('"label" should be a string')
+    return this.setRule('label', label)
   }
 
   /**
@@ -41,15 +56,6 @@ class AnyRule {
     return this.setRule('in', possible, message)
   }
 
-  message(message) {
-    if (typeof message !== 'string') throw new Error('"message" should be a string')
-    return this.setRule('message', message)
-  }
-
-  label(label) {
-    if (typeof label !== 'string') throw new Error('"label" should be a string')
-    return this.setRule('label', label)
-  }
 
 }
 
@@ -73,21 +79,27 @@ class AnyValidator {
     let errors = []
 
     // The value which will be checked
-    let checkValue = this.sanitizeValue(value)
+    const sanitizedValue = this.sanitizeValue(value)
 
     // Check requiredness before all other rules
-    let requiredErrorMessage = this.checkRule(checkValue, 'required')
+    let requiredErrorMessage = this.checkRule(sanitizedValue, 'required')
     if (requiredErrorMessage) return this.formatErrorMessage(key, value, [ requiredErrorMessage ])
 
+    // If the value is required, then the above "required" validation would have returned by now
+    // If the value is not required as is empty, then there's no point in continuing validation
+    if (sanitizedValue === '') return
+
     // Check everything else
+    let err
     for (var ruleName in this.rules) {
       if (typeof this[ruleName] === 'function' && ruleName !== 'required') {
-          errors.push(this.checkRule(checkValue, ruleName))
+        err = this.checkRule(sanitizedValue, ruleName)
+        if (err) errors.push(err)
       }
     }
 
-    // Normalize Errors
-    errors = _.without(errors, null, undefined, '')
+    // Errors will now contain a value for every
+    //errors = _.without(errors, null, undefined, '')
 
     // Only return errors if some were found
     if (errors.length) return this.formatErrorMessage(key, value, errors)
@@ -101,15 +113,15 @@ class AnyValidator {
   }
 
   checkRule(value, ruleName) {
-    let rule = _.get('this.rules[ruleName].rule') || this.rules[ruleName]
-    let customMessage = _.get(this, 'rules.' + ruleName + '.message')
-    let errorMessage = this[ruleName](value, rule)
+    const rule = _.get('this.rules[ruleName].rule') || this.rules[ruleName]
+    const customMessage = _.get(this, 'rules.' + ruleName + '.message')
+    const errorMessage = this[ruleName](value, rule)
     return errorMessage ? (customMessage || errorMessage) : null
   }
 
   formatErrorMessage(key, value, errors) {
     return {
-      label: this.rules.label || titleCase(key),
+      label: this.rules.label || camelToLabel(key),
       value: value,
       errors: this.rules.message ? [ this.rules.message ] : errors
     }

@@ -1,5 +1,5 @@
 import validator from 'validator'
-import { AnyRule, AnyValidator } from './any'
+import { AnyRule, AnyValidator } from './Any'
 
 /****************************************
   Rule Builder
@@ -9,7 +9,9 @@ class StringRule extends AnyRule {
 
   constructor(rules, message) {
     super(rules)
-    if (!this.hasRule('string') && typeof message === 'string') {
+
+    // Establish "string" rule
+    if (!this.getRule('string') && typeof message === 'string') {
       this.rules.string = { string: true, message }
     } else {
       this.rules.string = true
@@ -17,7 +19,7 @@ class StringRule extends AnyRule {
   }
 
   setRule(ruleName, rule, message) {
-    let newRule = {
+    const newRule = {
       [ruleName]: (typeof message === 'string') ? { rule, message } : rule
     }
     return new StringRule(Object.assign({}, this.toJSON(), newRule))

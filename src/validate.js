@@ -1,17 +1,17 @@
 import _ from 'lodash'
-import { AnyRule, AnyValidator } from './any'
-import { NumericRule, NumericValidator } from './numeric'
-import { StringRule, StringValidator } from './string'
-import Schema from './schema'
+import { AnyRule, AnyValidator } from './rules/Any'
+import { NumericRule, NumericValidator } from './rules/Numeric'
+import { StringRule, StringValidator } from './rules/String'
+import Schema from './Schema'
 
-const validate = function(values, schema) {
+const validate = (values, schema) => {
   if (!values) throw new Error('`values` must be supplied')
   if (!schema) throw new Error('`schema` must be supplied')
-  let rawSchema = schema instanceof Schema ? schema.get() : schema
-  let allErrors = {}
+  const rawSchema = schema instanceof Schema ? schema.get() : schema
+  const allErrors = {}
 
   for (var key in rawSchema) {
-    let rules = rawSchema[key]
+    const rules = rawSchema[key]
     let errors
 
     // Number
