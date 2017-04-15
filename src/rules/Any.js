@@ -79,44 +79,60 @@ class AnyValidator {
     let errors = []
 
     // The value which will be checked
-    const sanitizedValue = this.sanitizeValue(value)
+    const normalizedValue = this.normalizeValue(value)
 
-    // Check requiredness before all other rules
-    let requiredErrorMessage = this.checkRule(sanitizedValue, 'required')
+    // Check requiredness before all other rules. Failing required-ness means no other
+    // validation is nessesary
+    const requiredErrorMessage = this.checkRule(normalizedValue, 'required')
     if (requiredErrorMessage) return this.formatErrorMessage(key, value, [ requiredErrorMessage ])
 
     // If the value is required, then the above "required" validation would have returned by now
     // If the value is not required as is empty, then there's no point in continuing validation
-    if (sanitizedValue === '') return
+    if (normalizedValue === '') return
+
+    // Check Type. Failing type means no other validation is nessesary
+    const typeErrorMessage = this.checkType(normalizedValue)
+    if (typeErrorMessage) return this.formatErrorMessage(key, value, [ typeErrorMessage ])
 
     // Check everything else
     let err
     for (var ruleName in this.rules) {
-      if (typeof this[ruleName] === 'function' && ruleName !== 'required') {
-        err = this.checkRule(sanitizedValue, ruleName)
+      if (ruleName !== 'required') {
+        err = this.checkRule(normalizedValue, ruleName)
         if (err) errors.push(err)
       }
     }
-
-    // Errors will now contain a value for every
-    //errors = _.without(errors, null, undefined, '')
 
     // Only return errors if some were found
     if (errors.length) return this.formatErrorMessage(key, value, errors)
 
   }
 
-  sanitizeValue(value) {
+  normalizeValue(value) {
     if (value === null || value === undefined) return ''
     if (typeof value === 'string') return value.trim()
-    return value + '' // otherwise, cast other values to string
+    return value
   }
 
   checkRule(value, ruleName) {
-    const rule = _.get('this.rules[ruleName].rule') || this.rules[ruleName]
-    const customMessage = _.get(this, 'rules.' + ruleName + '.message')
-    const errorMessage = this[ruleName](value, rule)
-    return errorMessage ? (customMessage || errorMessage) : null
+
+    // Establish `rule`, `message`, and `options`
+    if (_.get(this, 'rules.' + ruleName)) {
+      var { rule, message, ...options } = this.rules[ruleName]
+    } else {
+      var rule = this.rules[ruleName]
+      var message = null
+      var options = {}
+    }
+
+    // If the validation function exists, validate
+    if (typeof this[ruleName] === 'function') {
+      const errorMessage = this[ruleName](value, rule, options)
+      return errorMessage ? (message || errorMessage) : null
+    } else {
+      return null
+    }
+
   }
 
   formatErrorMessage(key, value, errors) {

@@ -29,4 +29,14 @@ import { Is, Schema, errorFormat, validate } from '../src'
 
 // console.log(validator.isNumeric('10'))
 
-console.log( validate({s: 1}, { s: Is.string() }) )
+
+
+
+console.log( 'Result **', validate({s: 'a a'}, { s: Is.string().alpha(false) }) )
+
+
+
+// expect(validate({n: 10}, { n: Is.numeric().integer() })).to.be.empty
+// expect(validate({n: -10}, { n: Is.numeric().integer() })).to.be.empty
+// expect(validate({n: '10'}, { n: Is.numeric().integer() })).to.be.empty
+// expect(validate({n: '-10'}, { n: Is.numeric().integer() })).to.be.empty

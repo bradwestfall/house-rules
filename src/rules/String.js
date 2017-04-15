@@ -9,18 +9,11 @@ class StringRule extends AnyRule {
 
   constructor(rules, message) {
     super(rules)
-
-    // Establish "string" rule
-    if (!this.getRule('string') && typeof message === 'string') {
-      this.rules.string = { string: true, message }
-    } else {
-      this.rules.string = true
-    }
   }
 
-  setRule(ruleName, rule, message) {
+  setRule(ruleName, rule, options) {
     const newRule = {
-      [ruleName]: (typeof message === 'string') ? { rule, message } : rule
+      [ruleName]: (typeof options === undefined) ? rule : Object.assign({}, options, { rule })
     }
     return new StringRule(Object.assign({}, this.toJSON(), newRule))
   }
@@ -30,42 +23,47 @@ class StringRule extends AnyRule {
   }
 
   maxLength(maxLength, message) {
-    return this.setRule('maxLength', maxLength, message)
+    return this.setRule('maxLength', maxLength, { message })
   }
 
   minLength(minLength, message) {
-    return this.setRule('minLength', minLength, message)
+    return this.setRule('minLength', minLength, { message })
   }
 
   regex(expression, message) {
     if (typeof expression === 'string') throw new Error('Expressions should be Expression Literals, not Strings')
     if (!(expression instanceof RegExp)) throw new Error('This is not a regular expression')
-    return this.setRule('regex', expression, message)
+    return this.setRule('regex', expression, { message })
   }
 
   email(message) {
-    return this.setRule('email', true, message)
+    return this.setRule('email', true, { message })
   }
 
   ascii(message) {
-    return this.setRule('ascii', true, message)
+    return this.setRule('ascii', true, { message })
   }
 
-  isAlpha(message) {
-    return this.setRule('alpha', true, message)
+  alpha(strict = true, message) {
+    return this.setRule('alpha', true, { strict: !!strict, message })
   }
 
-  isAlphaNum(message) {
-    return this.setRule('alphaNum', true, message)
+  alphaNum(strict = true, message) {
+    return this.setRule('alphaNum', true, { strict: !!strict, message })
   }
 
 }
+
 
 /****************************************
   Validator
 *****************************************/
 
 class StringValidator extends AnyValidator {
+
+  checkType(value) {
+    return (typeof value === 'string') ? '' : 'Invalid string'
+  }
 
   maxLength(value, maxLength) {
     return (value.length <= maxLength) ? '' : 'Cannot exceed ' + maxLength + ' characters'
@@ -87,12 +85,14 @@ class StringValidator extends AnyValidator {
     return validator.isAscii(value) ? '' : 'Must only contain ASCII characters'
   }
 
-  alpha(value) {
-    return validator.isAlpha(value) ? '' : 'Must only contain alphabetic characters'
+  alpha(value, rule, options = {}) {
+    const valid = options.strict ? validator.isAlpha(value) : (/^[\w\s]+$/i.test(value))
+    return valid ? '' : 'Must only contain alphabetic characters'
   }
 
-  alphaNum(value) {
-    return validator.isAlphanumeric(value) ? '' : 'Must only contain alphabetic or numeric characters'
+  alphaNum(value, rule, options = {}) {
+    const valid = options.strict ? validator.isAlphanumeric(value) : (/^[\w\s\d]+$/i.test(value))
+    return valid ? '' : 'Must only contain alphabetic or numeric characters'
   }
 
 }

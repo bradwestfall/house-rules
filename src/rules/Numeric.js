@@ -10,17 +10,12 @@ class NumericRule extends AnyRule {
 
   constructor(rules, message) {
     super(rules)
-
-    // Establish "numeric" rule
-    if (!this.getRule('numeric') && typeof message === 'string') {
-      this.rules.numeric = { numeric: true, message }
-    } else {
-      this.rules.numeric = true
-    }
   }
 
-  setRule(ruleName, rule, message) {
-    const newRule = { [ruleName]: (typeof message === 'string') ? { rule, message } : rule }
+  setRule(ruleName, rule, options) {
+    const newRule = {
+      [ruleName]: (typeof options === undefined) ? rule : Object.assign({}, options, { rule })
+    }
     return new NumericRule(Object.assign({}, this.toJSON(), newRule))
   }
 
@@ -32,27 +27,27 @@ class NumericRule extends AnyRule {
   }
 
   integer(message) {
-    return this.setRule('integer', true, message)
+    return this.setRule('integer', true, { message })
   }
 
   min(min, message) {
-    return this.setRule('min', this.toNumber(min), message)
+    return this.setRule('min', this.toNumber(min), { message })
   }
 
   max(max, message) {
-    return this.setRule('max', this.toNumber(max), message)
+    return this.setRule('max', this.toNumber(max), { message })
   }
 
   positive(message) {
-    return this.setRule('positive', true, message)
+    return this.setRule('positive', true, { message })
   }
 
   negative(message) {
-    return this.setRule('negative', true, message)
+    return this.setRule('negative', true, { message })
   }
 
   precision(places, message) {
-
+    // todo
   }
 
 }
@@ -63,8 +58,8 @@ class NumericRule extends AnyRule {
 
 class NumericValidator extends AnyValidator {
 
-  numeric(value, rule) {
-    return (rule === true && isNumeric(value + '')) ? '' : 'Invalid number'
+  checkType(value) {
+    return (isNumeric(value + '')) ? '' : 'Invalid number'
   }
 
   integer(value, rule) {
