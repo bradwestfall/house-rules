@@ -16,14 +16,18 @@ const validate = (values, schema) => {
 
     // Number
     if (rules instanceof NumericRule) {
-      let numericValidator = new NumericValidator(rules)
+      const numericValidator = new NumericValidator(rules)
       errors = numericValidator.check(key, values[key])
 
     // String
     } else if (rules instanceof StringRule) {
-      let stringValidator = new StringValidator(rules)
+      const stringValidator = new StringValidator(rules)
       errors = stringValidator.check(key, values[key])
 
+    // Any (must go last since technichally all the rules are instances of AnyRule)
+    } else if (rules instanceof AnyRule) {
+      const anyValidator = new AnyValidator(rules)
+      errors = anyValidator.check(key, values[key])
     }
 
     if (errors) allErrors[key] = errors

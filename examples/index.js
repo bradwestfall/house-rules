@@ -25,18 +25,10 @@ import { Is, Schema, errorFormat, validate } from '../src'
 // console.log(errors)
 
 
-// import validator from 'validator'
+// import _ from 'lodash'
 
-// console.log(validator.isNumeric('10'))
-
-
-
-
-console.log( 'Result **', validate({s: 'a a'}, { s: Is.string().alpha(false) }) )
+// const value = {}
+// console.log(_.isPlainObject(value) && Object.keys(value).length === 0)
 
 
 
-// expect(validate({n: 10}, { n: Is.numeric().integer() })).to.be.empty
-// expect(validate({n: -10}, { n: Is.numeric().integer() })).to.be.empty
-// expect(validate({n: '10'}, { n: Is.numeric().integer() })).to.be.empty
-// expect(validate({n: '-10'}, { n: Is.numeric().integer() })).to.be.empty

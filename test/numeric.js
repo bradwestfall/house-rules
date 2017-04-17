@@ -4,40 +4,22 @@ import { Is, validate } from '../src'
 describe('Numeric Rules', () => {
 
   /****************************************
-    Required
+    Is Numeric
   *****************************************/
 
-  it('should pass required validation', () => {
+  const numericRule = Is.numeric()
 
-    // These should pass because the rule does not say it's required
-    expect(validate({}, { n: Is.numeric() })).to.be.empty
-    expect(validate({n: ''}, { n: Is.numeric() })).to.be.empty
-    expect(validate({n: null}, { n: Is.numeric() })).to.be.empty
-    expect(validate({n: undefined}, { n: Is.numeric() })).to.be.empty
-
+  it('should pass numeric validation', () => {
+    expect(validate({v: 1}, { v: numericRule })).to.be.empty
+    expect(validate({v: '1'}, { v: numericRule })).to.be.empty
   })
 
-  it('should fail required validation', () => {
-    expect(validate({}, { n: Is.numeric().required() })).to.have.keys('n')
-    expect(validate({n: ''}, { n: Is.numeric().required() })).to.have.keys('n')
-    expect(validate({n: null}, { n: Is.numeric().required() })).to.have.keys('n')
-    expect(validate({n: undefined}, { n: Is.numeric().required() })).to.have.keys('n')
-  })
-
-
-  /****************************************
-    Optional
-  *****************************************/
-
-  it('should pass optional validation', () => {
-
-    // These should pass because the optional method was used on a rule that
-    // was previously required
-    expect(validate({}, { n: Is.numeric().required().optional() })).to.be.empty
-    expect(validate({n: ''}, { n: Is.numeric().required().optional() })).to.be.empty
-    expect(validate({n: null}, { n: Is.numeric().required().optional() })).to.be.empty
-    expect(validate({n: undefined}, { n: Is.numeric().required().optional() })).to.be.empty
-
+  it('should fail numeric validation', () => {
+    expect(validate({v: 'a'}, { v: numericRule })).to.have.keys('v')
+    expect(validate({v: true}, { v: numericRule })).to.have.keys('v')
+    expect(validate({v: false}, { v: numericRule })).to.have.keys('v')
+    expect(validate({v: {}}, { v: numericRule })).to.have.keys('v')
+    expect(validate({v: () => {}}, { v: numericRule })).to.have.keys('v')
   })
 
 
@@ -46,18 +28,18 @@ describe('Numeric Rules', () => {
   *****************************************/
 
   it('should pass integer validation', () => {
-    expect(validate({n: 10}, { n: Is.numeric().integer() })).to.be.empty
-    expect(validate({n: -10}, { n: Is.numeric().integer() })).to.be.empty
-    expect(validate({n: '10'}, { n: Is.numeric().integer() })).to.be.empty
-    expect(validate({n: '-10'}, { n: Is.numeric().integer() })).to.be.empty
+    expect(validate({v: 10}, { v: Is.numeric().integer() })).to.be.empty
+    expect(validate({v: -10}, { v: Is.numeric().integer() })).to.be.empty
+    expect(validate({v: '10'}, { v: Is.numeric().integer() })).to.be.empty
+    expect(validate({v: '-10'}, { v: Is.numeric().integer() })).to.be.empty
   })
 
   it('should fail integer validation', () => {
-    expect(validate({n: 10.1}, { n: Is.numeric().integer() })).to.have.keys('n')
-    expect(validate({n: '10.1'}, { n: Is.numeric().integer() })).to.have.keys('n')
-    expect(validate({n: 'abc'}, { n: Is.numeric().integer() })).to.have.keys('n')
-    expect(validate({n: false}, { n: Is.numeric().integer() })).to.have.keys('n')
-    expect(validate({n: true}, { n: Is.numeric().integer() })).to.have.keys('n')
+    expect(validate({v: 10.1}, { v: Is.numeric().integer() })).to.have.keys('v')
+    expect(validate({v: '10.1'}, { v: Is.numeric().integer() })).to.have.keys('v')
+    expect(validate({v: 'abc'}, { v: Is.numeric().integer() })).to.have.keys('v')
+    expect(validate({v: false}, { v: Is.numeric().integer() })).to.have.keys('v')
+    expect(validate({v: true}, { v: Is.numeric().integer() })).to.have.keys('v')
   })
 
 
@@ -68,38 +50,38 @@ describe('Numeric Rules', () => {
   it('should pass min validation', () => {
 
     // Integers
-    expect(validate({n: 10}, { n: Is.numeric().min(10) })).to.be.empty
-    expect(validate({n: 0}, { n: Is.numeric().min(-1) })).to.be.empty
-    expect(validate({n: 11}, { n: Is.numeric().min(10) })).to.be.empty
-    expect(validate({n: '11'}, { n: Is.numeric().min(10) })).to.be.empty
-    expect(validate({n: 11}, { n: Is.numeric().min('10') })).to.be.empty
-    expect(validate({n: '11'}, { n: Is.numeric().min('10') })).to.be.empty
+    expect(validate({v: 10}, { v: Is.numeric().min(10) })).to.be.empty
+    expect(validate({v: 0}, { v: Is.numeric().min(-1) })).to.be.empty
+    expect(validate({v: 11}, { v: Is.numeric().min(10) })).to.be.empty
+    expect(validate({v: '11'}, { v: Is.numeric().min(10) })).to.be.empty
+    expect(validate({v: 11}, { v: Is.numeric().min('10') })).to.be.empty
+    expect(validate({v: '11'}, { v: Is.numeric().min('10') })).to.be.empty
 
     // Floats
-    expect(validate({n: 10.0}, { n: Is.numeric().min(10) })).to.be.empty
-    expect(validate({n: 10.0}, { n: Is.numeric().min(10.0) })).to.be.empty
-    expect(validate({n: 10.1}, { n: Is.numeric().min(10) })).to.be.empty
-    expect(validate({n: 10.1}, { n: Is.numeric().min(10.0) })).to.be.empty
-    expect(validate({n: '10.0'}, { n: Is.numeric().min('10') })).to.be.empty
-    expect(validate({n: '10.0'}, { n: Is.numeric().min('10.0') })).to.be.empty
-    expect(validate({n: '10.1'}, { n: Is.numeric().min('10') })).to.be.empty
-    expect(validate({n: '10.1'}, { n: Is.numeric().min('10.0') })).to.be.empty
+    expect(validate({v: 10.0}, { v: Is.numeric().min(10) })).to.be.empty
+    expect(validate({v: 10.0}, { v: Is.numeric().min(10.0) })).to.be.empty
+    expect(validate({v: 10.1}, { v: Is.numeric().min(10) })).to.be.empty
+    expect(validate({v: 10.1}, { v: Is.numeric().min(10.0) })).to.be.empty
+    expect(validate({v: '10.0'}, { v: Is.numeric().min('10') })).to.be.empty
+    expect(validate({v: '10.0'}, { v: Is.numeric().min('10.0') })).to.be.empty
+    expect(validate({v: '10.1'}, { v: Is.numeric().min('10') })).to.be.empty
+    expect(validate({v: '10.1'}, { v: Is.numeric().min('10.0') })).to.be.empty
 
   })
 
   it('should fail min validation', () => {
 
     // Integers
-    expect(validate({n: 9}, { n: Is.numeric().min(10) })).to.have.keys('n')
-    expect(validate({n: '9'}, { n: Is.numeric().min(10) })).to.have.keys('n')
-    expect(validate({n: 9}, { n: Is.numeric().min('10') })).to.have.keys('n')
-    expect(validate({n: '9'}, { n: Is.numeric().min('10') })).to.have.keys('n')
+    expect(validate({v: 9}, { v: Is.numeric().min(10) })).to.have.keys('v')
+    expect(validate({v: '9'}, { v: Is.numeric().min(10) })).to.have.keys('v')
+    expect(validate({v: 9}, { v: Is.numeric().min('10') })).to.have.keys('v')
+    expect(validate({v: '9'}, { v: Is.numeric().min('10') })).to.have.keys('v')
 
     // Floats
-    expect(validate({n: 9.9}, { n: Is.numeric().min(10) })).to.have.keys('n')
-    expect(validate({n: 9.9}, { n: Is.numeric().min(10.0) })).to.have.keys('n')
-    expect(validate({n: '9.9'}, { n: Is.numeric().min('10') })).to.have.keys('n')
-    expect(validate({n: '9.9'}, { n: Is.numeric().min('10.0') })).to.have.keys('n')
+    expect(validate({v: 9.9}, { v: Is.numeric().min(10) })).to.have.keys('v')
+    expect(validate({v: 9.9}, { v: Is.numeric().min(10.0) })).to.have.keys('v')
+    expect(validate({v: '9.9'}, { v: Is.numeric().min('10') })).to.have.keys('v')
+    expect(validate({v: '9.9'}, { v: Is.numeric().min('10.0') })).to.have.keys('v')
 
   })
 
@@ -111,39 +93,39 @@ describe('Numeric Rules', () => {
   it('should pass max validation', () => {
 
     // Integers
-    expect(validate({n: 10}, { n: Is.numeric().max(10) })).to.be.empty
-    expect(validate({n: -1}, { n: Is.numeric().max(0) })).to.be.empty
-    expect(validate({n: 9}, { n: Is.numeric().max(10) })).to.be.empty
-    expect(validate({n: '9'}, { n: Is.numeric().max(10) })).to.be.empty
-    expect(validate({n: 9}, { n: Is.numeric().max('10') })).to.be.empty
-    expect(validate({n: '9'}, { n: Is.numeric().max('10') })).to.be.empty
+    expect(validate({v: 10}, { v: Is.numeric().max(10) })).to.be.empty
+    expect(validate({v: -1}, { v: Is.numeric().max(0) })).to.be.empty
+    expect(validate({v: 9}, { v: Is.numeric().max(10) })).to.be.empty
+    expect(validate({v: '9'}, { v: Is.numeric().max(10) })).to.be.empty
+    expect(validate({v: 9}, { v: Is.numeric().max('10') })).to.be.empty
+    expect(validate({v: '9'}, { v: Is.numeric().max('10') })).to.be.empty
 
     // Floats
-    expect(validate({n: 10.0}, { n: Is.numeric().max(10.0) })).to.be.empty
-    expect(validate({n: -1.0}, { n: Is.numeric().max(0) })).to.be.empty
-    expect(validate({n: 10.0}, { n: Is.numeric().max(10.0) })).to.be.empty
-    expect(validate({n: 9.9}, { n: Is.numeric().max(10) })).to.be.empty
-    expect(validate({n: 9.9}, { n: Is.numeric().max(10.0) })).to.be.empty
-    expect(validate({n: '10.0'}, { n: Is.numeric().max('10') })).to.be.empty
-    expect(validate({n: '10.0'}, { n: Is.numeric().max('10.0') })).to.be.empty
-    expect(validate({n: '9.9'}, { n: Is.numeric().max('10') })).to.be.empty
-    expect(validate({n: '9.9'}, { n: Is.numeric().max('10.0') })).to.be.empty
+    expect(validate({v: 10.0}, { v: Is.numeric().max(10.0) })).to.be.empty
+    expect(validate({v: -1.0}, { v: Is.numeric().max(0) })).to.be.empty
+    expect(validate({v: 10.0}, { v: Is.numeric().max(10.0) })).to.be.empty
+    expect(validate({v: 9.9}, { v: Is.numeric().max(10) })).to.be.empty
+    expect(validate({v: 9.9}, { v: Is.numeric().max(10.0) })).to.be.empty
+    expect(validate({v: '10.0'}, { v: Is.numeric().max('10') })).to.be.empty
+    expect(validate({v: '10.0'}, { v: Is.numeric().max('10.0') })).to.be.empty
+    expect(validate({v: '9.9'}, { v: Is.numeric().max('10') })).to.be.empty
+    expect(validate({v: '9.9'}, { v: Is.numeric().max('10.0') })).to.be.empty
 
   })
 
   it('should fail max validation', () => {
 
     // Integers
-    expect(validate({n: 11}, { n: Is.numeric().max(10) })).to.have.keys('n')
-    expect(validate({n: '11'}, { n: Is.numeric().max(10) })).to.have.keys('n')
-    expect(validate({n: 11}, { n: Is.numeric().max('10') })).to.have.keys('n')
-    expect(validate({n: '11'}, { n: Is.numeric().max('10') })).to.have.keys('n')
+    expect(validate({v: 11}, { v: Is.numeric().max(10) })).to.have.keys('v')
+    expect(validate({v: '11'}, { v: Is.numeric().max(10) })).to.have.keys('v')
+    expect(validate({v: 11}, { v: Is.numeric().max('10') })).to.have.keys('v')
+    expect(validate({v: '11'}, { v: Is.numeric().max('10') })).to.have.keys('v')
 
     // Floats
-    expect(validate({n: 10.1}, { n: Is.numeric().max(10) })).to.have.keys('n')
-    expect(validate({n: 10.1}, { n: Is.numeric().max(10.0) })).to.have.keys('n')
-    expect(validate({n: '10.1'}, { n: Is.numeric().max('10') })).to.have.keys('n')
-    expect(validate({n: '10.1'}, { n: Is.numeric().max('10.0') })).to.have.keys('n')
+    expect(validate({v: 10.1}, { v: Is.numeric().max(10) })).to.have.keys('v')
+    expect(validate({v: 10.1}, { v: Is.numeric().max(10.0) })).to.have.keys('v')
+    expect(validate({v: '10.1'}, { v: Is.numeric().max('10') })).to.have.keys('v')
+    expect(validate({v: '10.1'}, { v: Is.numeric().max('10.0') })).to.have.keys('v')
 
   })
 
@@ -155,24 +137,24 @@ describe('Numeric Rules', () => {
   it('should pass positive validation', () => {
 
     // Integers
-    expect(validate({n: 1}, { n: Is.numeric().positive() })).to.be.empty
-    expect(validate({n: '1'}, { n: Is.numeric().positive() })).to.be.empty
+    expect(validate({v: 1}, { v: Is.numeric().positive() })).to.be.empty
+    expect(validate({v: '1'}, { v: Is.numeric().positive() })).to.be.empty
 
     // Floats
-    expect(validate({n: 0.1}, { n: Is.numeric().positive() })).to.be.empty
-    expect(validate({n: '0.1'}, { n: Is.numeric().positive() })).to.be.empty
+    expect(validate({v: 0.1}, { v: Is.numeric().positive() })).to.be.empty
+    expect(validate({v: '0.1'}, { v: Is.numeric().positive() })).to.be.empty
 
   })
 
   it('should fail positive validation', () => {
 
     // Integers
-    expect(validate({n: -1}, { n: Is.numeric().positive() })).to.have.keys('n')
-    expect(validate({n: '-1'}, { n: Is.numeric().positive() })).to.have.keys('n')
+    expect(validate({v: -1}, { v: Is.numeric().positive() })).to.have.keys('v')
+    expect(validate({v: '-1'}, { v: Is.numeric().positive() })).to.have.keys('v')
 
     // Floats
-    expect(validate({n: -0.1}, { n: Is.numeric().positive() })).to.have.keys('n')
-    expect(validate({n: '-0.1'}, { n: Is.numeric().positive() })).to.have.keys('n')
+    expect(validate({v: -0.1}, { v: Is.numeric().positive() })).to.have.keys('v')
+    expect(validate({v: '-0.1'}, { v: Is.numeric().positive() })).to.have.keys('v')
 
   })
 
@@ -184,24 +166,24 @@ describe('Numeric Rules', () => {
   it('should pass positive validation', () => {
 
     // Integers
-    expect(validate({n: -1}, { n: Is.numeric().negative() })).to.be.empty
-    expect(validate({n: '-1'}, { n: Is.numeric().negative() })).to.be.empty
+    expect(validate({v: -1}, { v: Is.numeric().negative() })).to.be.empty
+    expect(validate({v: '-1'}, { v: Is.numeric().negative() })).to.be.empty
 
     // Floats
-    expect(validate({n: -0.1}, { n: Is.numeric().negative() })).to.be.empty
-    expect(validate({n: '-0.1'}, { n: Is.numeric().negative() })).to.be.empty
+    expect(validate({v: -0.1}, { v: Is.numeric().negative() })).to.be.empty
+    expect(validate({v: '-0.1'}, { v: Is.numeric().negative() })).to.be.empty
 
   })
 
   it('should fail positive validation', () => {
 
     // Integers
-    expect(validate({n: 1}, { n: Is.numeric().negative() })).to.have.keys('n')
-    expect(validate({n: '1'}, { n: Is.numeric().negative() })).to.have.keys('n')
+    expect(validate({v: 1}, { v: Is.numeric().negative() })).to.have.keys('v')
+    expect(validate({v: '1'}, { v: Is.numeric().negative() })).to.have.keys('v')
 
     // Floats
-    expect(validate({n: 0.1}, { n: Is.numeric().negative() })).to.have.keys('n')
-    expect(validate({n: '0.1'}, { n: Is.numeric().negative() })).to.have.keys('n')
+    expect(validate({v: 0.1}, { v: Is.numeric().negative() })).to.have.keys('v')
+    expect(validate({v: '0.1'}, { v: Is.numeric().negative() })).to.have.keys('v')
 
   })
 

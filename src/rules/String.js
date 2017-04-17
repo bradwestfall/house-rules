@@ -9,17 +9,23 @@ class StringRule extends AnyRule {
 
   constructor(rules, message) {
     super(rules)
+
+    // If this object is being made for the first time (and not chained as `setRule` does below)
+    if (!this.getRule('type')) {
+      this.rules.type = { type: 'string', message }
+    } else {
+      this.rules.type = 'string'
+    }
   }
 
   setRule(ruleName, rule, options) {
-    const newRule = {
+    return new StringRule(Object.assign({}, this.toJSON(), {
       [ruleName]: (typeof options === undefined) ? rule : Object.assign({}, options, { rule })
-    }
-    return new StringRule(Object.assign({}, this.toJSON(), newRule))
+    }))
   }
 
   length(length, message) {
-    return this.maxLength(length, message)
+    return this.setRule('length', length, { message })
   }
 
   maxLength(maxLength, message) {
@@ -52,6 +58,14 @@ class StringRule extends AnyRule {
     return this.setRule('alphaNum', true, { strict: !!strict, message })
   }
 
+  lowercase(message) {
+    return this.setRule('lowercase', true, { message })
+  }
+
+  uppercase(message) {
+    return this.setRule('uppercase', true, { message })
+  }
+
 }
 
 
@@ -61,8 +75,12 @@ class StringRule extends AnyRule {
 
 class StringValidator extends AnyValidator {
 
-  checkType(value) {
+  type(value) {
     return (typeof value === 'string') ? '' : 'Invalid string'
+  }
+
+  length(value, length) {
+    return (value.length === length) ? '' : 'Must be ' + length + ' characters'
   }
 
   maxLength(value, maxLength) {
@@ -93,6 +111,14 @@ class StringValidator extends AnyValidator {
   alphaNum(value, rule, options = {}) {
     const valid = options.strict ? validator.isAlphanumeric(value) : (/^[\w\s\d]+$/i.test(value))
     return valid ? '' : 'Must only contain alphabetic or numeric characters'
+  }
+
+  lowercase(value) {
+    return validator.isLowercase(value) ? '' : 'Must be losercase'
+  }
+
+  uppercase(value) {
+    return validator.isUppercase(value) ? '' : 'Must be uppercase'
   }
 
 }

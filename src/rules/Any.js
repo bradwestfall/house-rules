@@ -15,9 +15,19 @@ class AnyRule {
     this.rules = rules || {}
   }
 
+  setRule(ruleName, rule, options) {
+    return new AnyRule(Object.assign({}, this.toJSON(), {
+      [ruleName]: (typeof options === undefined) ? rule : Object.assign({}, options, { rule })
+    }))
+  }
+
   getRule(ruleName) {
-    if (typeof ruleName !== 'string') throw new Error('"ruleName" should be a string')
+    if (typeof ruleName !== 'string') throw new Error('"ruleName" argument should be a string')
     return this.rules[ruleName]
+  }
+
+  removeRule(ruleName) {
+    delete this.rules[ruleName]
   }
 
   toJSON() {
@@ -26,14 +36,16 @@ class AnyRule {
 
 
   /**
-   * Customizing Errors
+   * Error Customizations
    */
 
+  // Use a "catch-all" message that overrides all other messages
   message(message) {
     if (typeof message !== 'string') throw new Error('"message" should be a string')
     return this.setRule('message', message)
   }
 
+  // Custom Labels
   label(label) {
     if (typeof label !== 'string') throw new Error('"label" should be a string')
     return this.setRule('label', label)
@@ -44,18 +56,18 @@ class AnyRule {
    */
 
   required(message) {
-    return this.setRule('required', true, message)
+    return this.setRule('required', true, { message })
   }
 
   optional() {
-    return this.setRule('required', false)
+    this.removeRule('required')
+    return this
   }
 
   in(possible, message) {
     if (!Array.isArray(possible)) throw new Error('"possible" should be an array')
-    return this.setRule('in', possible, message)
+    return this.setRule('in', possible, { message })
   }
-
 
 }
 
@@ -78,27 +90,26 @@ class AnyValidator {
     // Collect errors
     let errors = []
 
-    // The value which will be checked
-    const normalizedValue = this.normalizeValue(value)
-
     // Check requiredness before all other rules. Failing required-ness means no other
     // validation is nessesary
-    const requiredErrorMessage = this.checkRule(normalizedValue, 'required')
-    if (requiredErrorMessage) return this.formatErrorMessage(key, value, [ requiredErrorMessage ])
+    const requiredErrorMessage = this.checkRule(value, 'required')
+    if (requiredErrorMessage) return this.formatErrorMessage(key, value, requiredErrorMessage)
 
-    // If the value is required, then the above "required" validation would have returned by now
-    // If the value is not required as is empty, then there's no point in continuing validation
-    if (normalizedValue === '') return
+    // If the value is required, then the above "required" validation would have returned by now.
+    // But if the value is empty and not required, then there's no point in continuing validation
+    if (value === '') return
 
     // Check Type. Failing type means no other validation is nessesary
-    const typeErrorMessage = this.checkType(normalizedValue)
-    if (typeErrorMessage) return this.formatErrorMessage(key, value, [ typeErrorMessage ])
+    const typeErrorMessage = this.checkRule(value, 'type')
+    if (typeErrorMessage) return this.formatErrorMessage(key, value, typeErrorMessage)
 
     // Check everything else
     let err
     for (var ruleName in this.rules) {
-      if (ruleName !== 'required') {
-        err = this.checkRule(normalizedValue, ruleName)
+
+      // Already checked
+      if (ruleName !== 'required' && ruleName !== 'type') {
+        err = this.checkRule(value, ruleName)
         if (err) errors.push(err)
       }
     }
@@ -108,16 +119,10 @@ class AnyValidator {
 
   }
 
-  normalizeValue(value) {
-    if (value === null || value === undefined) return ''
-    if (typeof value === 'string') return value.trim()
-    return value
-  }
-
   checkRule(value, ruleName) {
 
-    // Establish `rule`, `message`, and `options`
-    if (_.get(this, 'rules.' + ruleName)) {
+    // Establish rule, message, and options
+    if (this.rules[ruleName]) {
       var { rule, message, ...options } = this.rules[ruleName]
     } else {
       var rule = this.rules[ruleName]
@@ -136,9 +141,12 @@ class AnyValidator {
   }
 
   formatErrorMessage(key, value, errors) {
+    errors = Array.isArray(errors) ? errors : [ errors ]
     return {
       label: this.rules.label || camelToLabel(key),
       value: value,
+
+      // Use overriding message if one was provided
       errors: this.rules.message ? [ this.rules.message ] : errors
     }
   }
@@ -148,7 +156,14 @@ class AnyValidator {
    */
 
   required(value, rule) {
-    return rule === true && !value ? 'Is required' : ''
+    const empty = (
+      value === null ||
+      value === undefined ||
+      (typeof value === 'string' && value.trim() === '') ||
+      (Array.isArray(value) && value.length === 0) ||
+      (_.isPlainObject(value) && Object.keys(value).length === 0)
+    )
+    return rule === true && empty ? 'Is required' : ''
   }
 
   in(value, possible) {

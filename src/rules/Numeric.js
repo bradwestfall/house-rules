@@ -10,13 +10,19 @@ class NumericRule extends AnyRule {
 
   constructor(rules, message) {
     super(rules)
+
+    // If this object is being made for the first time (and not chained as `setRule` does below)
+    if (!this.getRule('type')) {
+      this.rules.type = { rule: 'string', message }
+    } else {
+      this.rules.type = 'string'
+    }
   }
 
   setRule(ruleName, rule, options) {
-    const newRule = {
+    return new NumericRule(Object.assign({}, this.toJSON(), {
       [ruleName]: (typeof options === undefined) ? rule : Object.assign({}, options, { rule })
-    }
-    return new NumericRule(Object.assign({}, this.toJSON(), newRule))
+    }))
   }
 
   toNumber(n) {
@@ -58,7 +64,7 @@ class NumericRule extends AnyRule {
 
 class NumericValidator extends AnyValidator {
 
-  checkType(value) {
+  type(value) {
     return (isNumeric(value + '')) ? '' : 'Invalid number'
   }
 
