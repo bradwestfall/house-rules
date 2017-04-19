@@ -70,7 +70,6 @@ describe('Any Rules', () => {
     expect(validate({v: ''}, { v: requiredRule })).to.have.keys('v')
     expect(validate({v: null}, { v: requiredRule })).to.have.keys('v')
     expect(validate({v: undefined}, { v: requiredRule })).to.have.keys('v')
-    expect(validate({v: {}}, { v: requiredRule })).to.have.keys('v')
   })
 
   it('should fail required validation with a custom message', () => {

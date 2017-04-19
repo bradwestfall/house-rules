@@ -76,9 +76,9 @@ describe('Numeric Rules', () => {
     expect(validate({v: true}, { v: floatRule })).to.have.keys('v')
   })
 
-  // it('should fail float validation with a custom message', () => {
-  //   expect(validate({v: 1}, { v: Is.numeric().float('foo') })).to.have.deep.property('v.errors[0]', 'foo')
-  // })
+  it('should fail float validation with a custom message', () => {
+    expect(validate({v: 1.11}, { v: Is.numeric().float(1, 'foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  })
 
 
   /****************************************

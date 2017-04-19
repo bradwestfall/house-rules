@@ -100,9 +100,10 @@ class AnyValidator {
     const requiredErrorMessage = this.checkRule(value, 'required')
     if (requiredErrorMessage) return this.formatErrorMessage(key, value, requiredErrorMessage)
 
-    // If the value is required, then the above "required" validation would have returned by now.
-    // But if the value is empty and not required, then there's no point in continuing validation
-    if (value === '') return
+    // If a value is required and empty, the code will not get to this point. When a value
+    // is not required and it's empty, we will return without error and without doing
+    // other checks
+    if (isEmpty(value)) return
 
     // Check Type. Failing type means no other validation is nessesary
     const typeErrorMessage = this.checkRule(value, 'type')
@@ -161,7 +162,6 @@ class AnyValidator {
    */
 
   custom(value, cb) {
-    console.log('*******', typeof cb)
     return cb(value)
   }
 
@@ -170,6 +170,9 @@ class AnyValidator {
   }
 
   in(value, possible) {
+
+    console.log('INININ')
+
     const found = possible.findIndex(item => {
       if (item === value) return true
       if (item + '' === value + '') return true

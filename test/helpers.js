@@ -34,15 +34,11 @@ describe('Helpers: isEmpty', () => {
     expect(isEmpty(undefined)).to.be.true
     expect(isEmpty('')).to.be.true
     expect(isEmpty(' ')).to.be.true
-    expect(isEmpty([])).to.be.true
-    expect(isEmpty({})).to.be.true
   })
 
   it('should fail', () => {
     expect(isEmpty('a')).to.be.false
     expect(isEmpty(0)).to.be.false
-    expect(isEmpty([0])).to.be.false
-    expect(isEmpty({a: 0})).to.be.false
   })
 
 })
