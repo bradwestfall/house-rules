@@ -1,13 +1,11 @@
 import { expect } from 'chai'
-import { camelToLabel, isNumeric } from '../src/helpers'
-
+import { camelToLabel, isNumeric, isEmpty } from '../src/helpers'
 
 describe('Helpers: camelToLabel', () => {
   it('should transform camelCase to "Label Case"', () => {
     expect(camelToLabel('fooBar')).to.eql('Foo Bar')
   })
 })
-
 
 describe('Helpers: isNumeric', () => {
 
@@ -25,6 +23,26 @@ describe('Helpers: isNumeric', () => {
     expect(() => { isNumeric(1) }).to.throw
     expect(isNumeric('')).to.be.false
     expect(isNumeric('a')).to.be.false
+  })
+
+})
+
+describe('Helpers: isEmpty', () => {
+
+  it('should pass', () => {
+    expect(isEmpty(null)).to.be.true
+    expect(isEmpty(undefined)).to.be.true
+    expect(isEmpty('')).to.be.true
+    expect(isEmpty(' ')).to.be.true
+    expect(isEmpty([])).to.be.true
+    expect(isEmpty({})).to.be.true
+  })
+
+  it('should fail', () => {
+    expect(isEmpty('a')).to.be.false
+    expect(isEmpty(0)).to.be.false
+    expect(isEmpty([0])).to.be.false
+    expect(isEmpty({a: 0})).to.be.false
   })
 
 })

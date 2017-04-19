@@ -8,10 +8,6 @@ class Schema {
     this.internals = internals || {}
   }
 
-  // find(key) {
-  //   return this.schema[key]
-  // }
-
   get() {
     return this.schema
   }

@@ -22,25 +22,63 @@ describe('Numeric Rules', () => {
     expect(validate({v: () => {}}, { v: numericRule })).to.have.keys('v')
   })
 
+  it('should fail numeric validation with a custom message', () => {
+    expect(validate({v: 'a'}, { v: Is.numeric('foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  })
+
 
   /****************************************
     Integer
   *****************************************/
 
+  const integerRule = Is.numeric().integer()
+
   it('should pass integer validation', () => {
-    expect(validate({v: 10}, { v: Is.numeric().integer() })).to.be.empty
-    expect(validate({v: -10}, { v: Is.numeric().integer() })).to.be.empty
-    expect(validate({v: '10'}, { v: Is.numeric().integer() })).to.be.empty
-    expect(validate({v: '-10'}, { v: Is.numeric().integer() })).to.be.empty
+    expect(validate({v: 1}, { v: integerRule })).to.be.empty
+    expect(validate({v: -1}, { v: integerRule })).to.be.empty
+    expect(validate({v: '1'}, { v: integerRule })).to.be.empty
+    expect(validate({v: '-1'}, { v: integerRule })).to.be.empty
   })
 
   it('should fail integer validation', () => {
-    expect(validate({v: 10.1}, { v: Is.numeric().integer() })).to.have.keys('v')
-    expect(validate({v: '10.1'}, { v: Is.numeric().integer() })).to.have.keys('v')
-    expect(validate({v: 'abc'}, { v: Is.numeric().integer() })).to.have.keys('v')
-    expect(validate({v: false}, { v: Is.numeric().integer() })).to.have.keys('v')
-    expect(validate({v: true}, { v: Is.numeric().integer() })).to.have.keys('v')
+    expect(validate({v: 1.1}, { v: integerRule })).to.have.keys('v')
+    expect(validate({v: '1.1'}, { v: integerRule })).to.have.keys('v')
+    expect(validate({v: 'abc'}, { v: integerRule })).to.have.keys('v')
+    expect(validate({v: false}, { v: integerRule })).to.have.keys('v')
+    expect(validate({v: true}, { v: integerRule })).to.have.keys('v')
   })
+
+  it('should fail integer validation with a custom message', () => {
+    expect(validate({v: 1.1}, { v: Is.numeric().integer('foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  })
+
+
+  /****************************************
+    Float
+  *****************************************/
+
+  const floatRule = Is.numeric().float(1)
+
+  it('should pass float validation', () => {
+    expect(validate({v: 1}, { v: floatRule })).to.be.empty
+    expect(validate({v: 1.1}, { v: floatRule })).to.be.empty
+    expect(validate({v: -1.1}, { v: floatRule })).to.be.empty
+    expect(validate({v: '1'}, { v: floatRule })).to.be.empty
+    expect(validate({v: '1.1'}, { v: floatRule })).to.be.empty
+    expect(validate({v: '-1.1'}, { v: floatRule })).to.be.empty
+  })
+
+  it('should fail float validation', () => {
+    expect(validate({v: 1.11}, { v: floatRule })).to.have.keys('v')
+    expect(validate({v: '1. 1'}, { v: floatRule })).to.have.keys('v')
+    expect(validate({v: 'abc'}, { v: floatRule })).to.have.keys('v')
+    expect(validate({v: false}, { v: floatRule })).to.have.keys('v')
+    expect(validate({v: true}, { v: floatRule })).to.have.keys('v')
+  })
+
+  // it('should fail float validation with a custom message', () => {
+  //   expect(validate({v: 1}, { v: Is.numeric().float('foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  // })
 
 
   /****************************************
@@ -83,6 +121,10 @@ describe('Numeric Rules', () => {
     expect(validate({v: '9.9'}, { v: Is.numeric().min('10') })).to.have.keys('v')
     expect(validate({v: '9.9'}, { v: Is.numeric().min('10.0') })).to.have.keys('v')
 
+  })
+
+  it('should fail min validation with a custom message', () => {
+    expect(validate({v: 9}, { v: Is.numeric().min(10, 'foo') })).to.have.deep.property('v.errors[0]', 'foo')
   })
 
 
@@ -129,33 +171,33 @@ describe('Numeric Rules', () => {
 
   })
 
+  it('should fail max validation with a custom message', () => {
+    expect(validate({v: 11}, { v: Is.numeric().max(10, 'foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  })
+
 
   /****************************************
     Positive
   *****************************************/
 
+  const positiveRule = Is.numeric().positive()
+
   it('should pass positive validation', () => {
-
-    // Integers
-    expect(validate({v: 1}, { v: Is.numeric().positive() })).to.be.empty
-    expect(validate({v: '1'}, { v: Is.numeric().positive() })).to.be.empty
-
-    // Floats
-    expect(validate({v: 0.1}, { v: Is.numeric().positive() })).to.be.empty
-    expect(validate({v: '0.1'}, { v: Is.numeric().positive() })).to.be.empty
-
+    expect(validate({v: 1}, { v: positiveRule })).to.be.empty
+    expect(validate({v: '1'}, { v: positiveRule })).to.be.empty
+    expect(validate({v: 0.1}, { v: positiveRule })).to.be.empty
+    expect(validate({v: '0.1'}, { v: positiveRule })).to.be.empty
   })
 
   it('should fail positive validation', () => {
+    expect(validate({v: -1}, { v: positiveRule })).to.have.keys('v')
+    expect(validate({v: '-1'}, { v: positiveRule })).to.have.keys('v')
+    expect(validate({v: -0.1}, { v: positiveRule })).to.have.keys('v')
+    expect(validate({v: '-0.1'}, { v: positiveRule })).to.have.keys('v')
+  })
 
-    // Integers
-    expect(validate({v: -1}, { v: Is.numeric().positive() })).to.have.keys('v')
-    expect(validate({v: '-1'}, { v: Is.numeric().positive() })).to.have.keys('v')
-
-    // Floats
-    expect(validate({v: -0.1}, { v: Is.numeric().positive() })).to.have.keys('v')
-    expect(validate({v: '-0.1'}, { v: Is.numeric().positive() })).to.have.keys('v')
-
+  it('should fail positive validation with a custom message', () => {
+    expect(validate({v: -1}, { v: Is.numeric().positive('foo') })).to.have.deep.property('v.errors[0]', 'foo')
   })
 
 
@@ -163,28 +205,24 @@ describe('Numeric Rules', () => {
     Negative
   *****************************************/
 
-  it('should pass positive validation', () => {
+  const negativeRule = Is.numeric().negative()
 
-    // Integers
-    expect(validate({v: -1}, { v: Is.numeric().negative() })).to.be.empty
-    expect(validate({v: '-1'}, { v: Is.numeric().negative() })).to.be.empty
-
-    // Floats
-    expect(validate({v: -0.1}, { v: Is.numeric().negative() })).to.be.empty
-    expect(validate({v: '-0.1'}, { v: Is.numeric().negative() })).to.be.empty
-
+  it('should pass negative validation', () => {
+    expect(validate({v: -1}, { v: negativeRule })).to.be.empty
+    expect(validate({v: '-1'}, { v: negativeRule })).to.be.empty
+    expect(validate({v: -0.1}, { v: negativeRule })).to.be.empty
+    expect(validate({v: '-0.1'}, { v: negativeRule })).to.be.empty
   })
 
-  it('should fail positive validation', () => {
+  it('should fail negative validation', () => {
+    expect(validate({v: 1}, { v: negativeRule })).to.have.keys('v')
+    expect(validate({v: '1'}, { v: negativeRule })).to.have.keys('v')
+    expect(validate({v: 0.1}, { v: negativeRule })).to.have.keys('v')
+    expect(validate({v: '0.1'}, { v: negativeRule })).to.have.keys('v')
+  })
 
-    // Integers
-    expect(validate({v: 1}, { v: Is.numeric().negative() })).to.have.keys('v')
-    expect(validate({v: '1'}, { v: Is.numeric().negative() })).to.have.keys('v')
-
-    // Floats
-    expect(validate({v: 0.1}, { v: Is.numeric().negative() })).to.have.keys('v')
-    expect(validate({v: '0.1'}, { v: Is.numeric().negative() })).to.have.keys('v')
-
+  it('should fail negative validation with a custom message', () => {
+    expect(validate({v: 1}, { v: Is.numeric().negative('foo') })).to.have.deep.property('v.errors[0]', 'foo')
   })
 
 })

@@ -13,15 +13,14 @@ class NumericRule extends AnyRule {
 
     // If this object is being made for the first time (and not chained as `setRule` does below)
     if (!this.getRule('type')) {
-      this.rules.type = { rule: 'string', message }
-    } else {
-      this.rules.type = 'string'
+      this.rules.type = message ? { rule: 'numeric', message } : 'numeric'
     }
   }
 
   setRule(ruleName, rule, options) {
+    if (typeof ruleName !== 'string') throw new Error('"ruleName" argument should be a string')
     return new NumericRule(Object.assign({}, this.toJSON(), {
-      [ruleName]: (typeof options === undefined) ? rule : Object.assign({}, options, { rule })
+      [ruleName]: (typeof options === 'undefined') ? rule : Object.assign({}, options, { rule })
     }))
   }
 
@@ -34,6 +33,10 @@ class NumericRule extends AnyRule {
 
   integer(message) {
     return this.setRule('integer', true, { message })
+  }
+
+  float(precision, message) {
+    return this.setRule('float', true, { precision, message })
   }
 
   min(min, message) {
@@ -52,10 +55,6 @@ class NumericRule extends AnyRule {
     return this.setRule('negative', true, { message })
   }
 
-  precision(places, message) {
-    // todo
-  }
-
 }
 
 /****************************************
@@ -69,7 +68,16 @@ class NumericValidator extends AnyValidator {
   }
 
   integer(value, rule) {
-    return rule === true && validator.isInt(value + '') ? '': 'Invalid integer'
+    return validator.isInt(value + '') ? '' : 'Invalid integer'
+  }
+
+  float(value, rule, options) {
+    if (!validator.isFloat(value + '')) return 'Invalid float'
+    if (Number(value) % 1 !== 0) { // has decimal places
+      const parts = (value + '').split('.')
+      if (parseInt(parts[1].length) > parseInt(options.precision)) return 'Cannot have more than ' + options.precision + ' decimal places'
+    }
+    return ''
   }
 
   minMaxChecker(value, rules) {
@@ -88,12 +96,12 @@ class NumericValidator extends AnyValidator {
     return this.minMaxChecker(value + '', { max: rule }) ? '' : 'Must me smaller than ' + rule
   }
 
-  positive(value, rule) {
-    return rule === true && value > 0 ? '' : 'Value must be positive'
+  positive(value) {
+    return Number(value) > 0 ? '' : 'Value must be positive'
   }
 
-  negative(value, rule) {
-    return rule === true && value < 0 ? '' : 'Value must be negative'
+  negative(value) {
+    return Number(value) < 0 ? '' : 'Value must be negative'
   }
 
 }

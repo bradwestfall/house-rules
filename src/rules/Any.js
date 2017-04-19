@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import { camelToLabel } from '../helpers'
+import validator from 'validator'
+import { camelToLabel, isEmpty } from '../helpers'
 
 /****************************************
   Rule Builder
@@ -16,13 +17,13 @@ class AnyRule {
   }
 
   setRule(ruleName, rule, options) {
+    if (typeof ruleName !== 'string') throw new Error('"ruleName" argument should be a string')
     return new AnyRule(Object.assign({}, this.toJSON(), {
-      [ruleName]: (typeof options === undefined) ? rule : Object.assign({}, options, { rule })
+      [ruleName]: (typeof options === 'undefined') ? rule : Object.assign({}, options, { rule })
     }))
   }
 
   getRule(ruleName) {
-    if (typeof ruleName !== 'string') throw new Error('"ruleName" argument should be a string')
     return this.rules[ruleName]
   }
 
@@ -55,6 +56,10 @@ class AnyRule {
    * Rules
    */
 
+  custom(cb) {
+    return this.setRule('custom', cb)
+  }
+
   required(message) {
     return this.setRule('required', true, { message })
   }
@@ -65,7 +70,7 @@ class AnyRule {
   }
 
   in(possible, message) {
-    if (!Array.isArray(possible)) throw new Error('"possible" should be an array')
+    if (!Array.isArray(possible)) throw new Error('"possible" must be an array')
     return this.setRule('in', possible, { message })
   }
 
@@ -122,7 +127,7 @@ class AnyValidator {
   checkRule(value, ruleName) {
 
     // Establish rule, message, and options
-    if (this.rules[ruleName]) {
+    if (_.get(this, 'rules.' + ruleName + '.rule')) {
       var { rule, message, ...options } = this.rules[ruleName]
     } else {
       var rule = this.rules[ruleName]
@@ -155,19 +160,21 @@ class AnyValidator {
    * Validate Rules
    */
 
-  required(value, rule) {
-    const empty = (
-      value === null ||
-      value === undefined ||
-      (typeof value === 'string' && value.trim() === '') ||
-      (Array.isArray(value) && value.length === 0) ||
-      (_.isPlainObject(value) && Object.keys(value).length === 0)
-    )
-    return rule === true && empty ? 'Is required' : ''
+  custom(value, cb) {
+    console.log('*******', typeof cb)
+    return cb(value)
+  }
+
+  required(value, required) {
+    return required && isEmpty(value) ? 'Is required' : ''
   }
 
   in(value, possible) {
-    return Array.isArray(possible) && possible.indexOf(value) !== -1 ? '' : 'Does not match possible values'
+    const found = possible.findIndex(item => {
+      if (item === value) return true
+      if (item + '' === value + '') return true
+    })
+    return found > -1 ? '' : 'Does not match possible values'
   }
 
 }

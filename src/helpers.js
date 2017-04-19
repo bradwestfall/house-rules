@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import validator from 'validator'
 
 const camelToLabel = camelCase =>  {
@@ -5,9 +6,19 @@ const camelToLabel = camelCase =>  {
     .replace(/^./, str => str.toUpperCase())
 }
 
-const isNumeric = n => {
-  if (typeof n !== 'string') throw new Error('isNumeric only accepts strings')
-  return validator.isNumeric(n) || validator.isDecimal(n)
+const isNumeric = number => {
+  if (typeof number !== 'string') throw new Error('isNumeric only accepts strings')
+  return validator.isNumeric(number) || validator.isDecimal(number)
 }
 
-export { camelToLabel, isNumeric }
+const isEmpty = value => {
+  return (
+    value === null ||
+    value === undefined ||
+    (typeof value === 'string' && value.trim() === '') ||
+    (Array.isArray(value) && value.length === 0) ||
+    (_.isPlainObject(value) && Object.keys(value).length === 0)
+  )
+}
+
+export { camelToLabel, isNumeric, isEmpty }

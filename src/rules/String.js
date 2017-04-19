@@ -12,15 +12,14 @@ class StringRule extends AnyRule {
 
     // If this object is being made for the first time (and not chained as `setRule` does below)
     if (!this.getRule('type')) {
-      this.rules.type = { type: 'string', message }
-    } else {
-      this.rules.type = 'string'
+      this.rules.type = message ? { rule: 'string', message } : 'string'
     }
   }
 
   setRule(ruleName, rule, options) {
+    if (typeof ruleName !== 'string') throw new Error('"ruleName" argument should be a string')
     return new StringRule(Object.assign({}, this.toJSON(), {
-      [ruleName]: (typeof options === undefined) ? rule : Object.assign({}, options, { rule })
+      [ruleName]: (typeof options === 'undefined') ? rule : Object.assign({}, options, { rule })
     }))
   }
 

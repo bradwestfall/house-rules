@@ -22,6 +22,10 @@ describe('String Rules', () => {
     expect(validate({v: () => {}}, { v: stringRule })).to.have.keys('v')
   })
 
+  it('should fail string validation with a custom message', () => {
+    expect(validate({v: 1}, { v: Is.string('foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  })
+
 
   /****************************************
     Length
@@ -36,6 +40,10 @@ describe('String Rules', () => {
   it('should fail length validation', () => {
     expect(validate({v: 'a'}, { v: lengthRule })).to.have.keys('v')
     expect(validate({v: 'aaa'}, { v: lengthRule })).to.have.keys('v')
+  })
+
+  it('should fail length validation with a custom message', () => {
+    expect(validate({v: 'a'}, { v: Is.string().length(2, 'foo') })).to.have.deep.property('v.errors[0]', 'foo')
   })
 
 
@@ -55,6 +63,10 @@ describe('String Rules', () => {
     expect(validate({v: 'aaa'}, { v: maxLengthRule })).to.have.keys('v')
   })
 
+  it('should fail maxLength validation with a custom message', () => {
+    expect(validate({v: 'aaa'}, { v: Is.string().maxLength(2, 'foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  })
+
 
   /****************************************
     Min Length
@@ -68,6 +80,10 @@ describe('String Rules', () => {
 
   it('should fail minLength validation', () => {
     expect(validate({v: 'a'}, { v: minLengthRule })).to.have.keys('v')
+  })
+
+  it('should fail minLength validation with a custom message', () => {
+    expect(validate({v: 'a'}, { v: Is.string().minLength(2, 'foo') })).to.have.deep.property('v.errors[0]', 'foo')
   })
 
 
@@ -85,6 +101,10 @@ describe('String Rules', () => {
     expect(validate({v: '1'}, { v: regexRule })).to.have.keys('v')
   })
 
+  it('should fail regex validation with a custom message', () => {
+    expect(validate({v: 'a'}, { v: Is.string().regex(/^[\d]{3}$/, 'foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  })
+
 
   /****************************************
     Email Rule
@@ -100,6 +120,10 @@ describe('String Rules', () => {
     expect(validate({v: 'a@a'}, { v: emailRule })).to.have.keys('v')
   })
 
+  it('should fail email validation with a custom message', () => {
+    expect(validate({v: 'a@a'}, { v: Is.string().email('foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  })
+
 
   /****************************************
     Ascii Rule
@@ -113,6 +137,10 @@ describe('String Rules', () => {
 
   it('should fail ascii validation', () => {
     expect(validate({v: '©'}, { v: asciiRule })).to.have.keys('v')
+  })
+
+  it('should fail ascii validation with a custom message', () => {
+    expect(validate({v: '©'}, { v: Is.string().ascii('foo') })).to.have.deep.property('v.errors[0]', 'foo')
   })
 
 
@@ -133,6 +161,10 @@ describe('String Rules', () => {
     expect(validate({v: '123'}, { v: alphaRule })).to.have.keys('v')
   })
 
+  it('should fail alpha validation with a custom message', () => {
+    expect(validate({v: 'a a'}, { v: Is.string().alpha(true, 'foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  })
+
 
   /****************************************
     Alpha/Numeric Rule
@@ -151,6 +183,10 @@ describe('String Rules', () => {
     expect(validate({v: '!'}, { v: alphaNumRule })).to.have.keys('v')
   })
 
+  it('should fail alphaNum validation with a custom message', () => {
+    expect(validate({v: 'a 1'}, { v: Is.string().alphaNum(true, 'foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  })
+
 
   /****************************************
     Lowercase
@@ -166,6 +202,10 @@ describe('String Rules', () => {
     expect(validate({v: 'ABC'}, { v: lowercaseRule })).to.have.keys('v')
   })
 
+  it('should fail lowercase validation with a custom message', () => {
+    expect(validate({v: 'ABC'}, { v: Is.string().lowercase('foo') })).to.have.deep.property('v.errors[0]', 'foo')
+  })
+
 
   /****************************************
     Uppercase
@@ -179,6 +219,10 @@ describe('String Rules', () => {
 
   it('should fail uppercase validation', () => {
     expect(validate({v: 'abc'}, { v: uppercaseRule })).to.have.keys('v')
+  })
+
+  it('should fail uppercase validation with a custom message', () => {
+    expect(validate({v: 'abc'}, { v: Is.string().uppercase('foo') })).to.have.deep.property('v.errors[0]', 'foo')
   })
 
 })
