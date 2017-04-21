@@ -126,7 +126,7 @@ By default, errors are formatted like the examples above with error objects havi
 They can be used like this:
 
 ```js
-import { Is, Schema, errorFormat } from 'home-rules'
+import { Is, Schema, errorFormat } from 'house-rules'
 
 const schema = new Schema({
   password: Is.string().ascii('No funky characters').minLength(6, 'Needs to be at least 6')
