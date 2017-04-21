@@ -29,6 +29,7 @@ class AnyRule {
 
   removeRule(ruleName) {
     delete this.rules[ruleName]
+    return this
   }
 
   toJSON() {
@@ -162,7 +163,8 @@ class AnyValidator {
    */
 
   custom(value, cb) {
-    return cb(value)
+    const err = cb(value)
+    return typeof err === 'string' ? err : ''
   }
 
   required(value, required) {

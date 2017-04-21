@@ -1,7 +1,7 @@
 const errorFormat = {
 
   combine(errors) {
-    let newErrors = {}
+    const newErrors = {}
     for (let key in errors) {
       newErrors[key] = errors[key].errors.join(', ')
     }
@@ -9,7 +9,7 @@ const errorFormat = {
   },
 
   combineWithLabels(errors) {
-    let newErrors = {}
+    const newErrors = {}
     for (let key in errors) {
       newErrors[key] = errors[key].label + ': ' + errors[key].errors.join(', ')
     }

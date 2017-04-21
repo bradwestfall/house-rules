@@ -113,7 +113,7 @@ class StringValidator extends AnyValidator {
   }
 
   lowercase(value) {
-    return validator.isLowercase(value) ? '' : 'Must be losercase'
+    return validator.isLowercase(value) ? '' : 'Must be lowercase'
   }
 
   uppercase(value) {
