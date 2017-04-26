@@ -29,11 +29,12 @@ class Schema {
     return this
   }
 
-  clone(keys = []) {
-    keys.forEach(key => {
-      if (!(key in this.schema)) throw new Error(key + ' not found in schema')
+  clone(fields = []) {
+    if (!Array.isArray(fields)) throw new Error('argument supplied for fields must be an array')
+    fields.forEach(field => {
+      if (!(field in this.schema)) throw new Error('The supplied field "' + field + '" not found in schema')
     })
-    return new Schema(_.pick(this.schema, keys), Object.assign({}, this.internals))
+    return new Schema(_.pick(this.schema, fields), Object.assign({}, this.internals))
   }
 
 }
