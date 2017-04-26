@@ -149,11 +149,11 @@ describe('String Rules', () => {
   *****************************************/
 
   const alphaRule = Is.string().alpha()
-  const alphaRuleLoose = Is.string().alpha(false)
+  const alphaRuleNonStrict = Is.string().alpha(false)
 
   it('should pass alpha validation', () => {
     expect(validate({v: 'abcXYZ'}, { v: alphaRule })).to.be.empty
-    expect(validate({v: 'abc\n XYZ'}, { v: alphaRuleLoose })).to.be.empty
+    expect(validate({v: 'abc\n XYZ'}, { v: alphaRuleNonStrict })).to.be.empty
   })
 
   it('should fail alpha validation', () => {
@@ -171,11 +171,11 @@ describe('String Rules', () => {
   *****************************************/
 
   const alphaNumRule = Is.string().alphaNum()
-  const alphaNumRuleLoose = Is.string().alphaNum(false)
+  const alphaNumRuleNonStrict = Is.string().alphaNum(false)
 
   it('should pass alphaNum validation', () => {
     expect(validate({v: 'abcXYZ123'}, { v: alphaNumRule })).to.be.empty
-    expect(validate({v: 'abc\n XYZ123'}, { v: alphaNumRuleLoose })).to.be.empty
+    expect(validate({v: 'abc\n XYZ123'}, { v: alphaNumRuleNonStrict })).to.be.empty
   })
 
   it('should fail alphaNum validation', () => {

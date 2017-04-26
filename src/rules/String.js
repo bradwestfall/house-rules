@@ -103,13 +103,19 @@ class StringValidator extends AnyValidator {
   }
 
   alpha(value, rule, options = {}) {
-    const valid = options.strict ? validator.isAlpha(value) : (/^[\w\s]+$/i.test(value))
-    return valid ? '' : 'Must only contain alphabetic characters'
+    if (options.strict) {
+      return validator.isAlpha(value) ? '' : 'Must only contain alphabetic characters'
+    } else {
+      return validator.isAlpha(value.replace(/[\s]+/, '')) ? '' : 'Must only contain alphabetic and whitespace characters'
+    }
   }
 
   alphaNum(value, rule, options = {}) {
-    const valid = options.strict ? validator.isAlphanumeric(value) : (/^[\w\s\d]+$/i.test(value))
-    return valid ? '' : 'Must only contain alphabetic or numeric characters'
+    if (options.strict) {
+      return validator.isAlphanumeric(value) ? '' : 'Must only contain alphabetic or numeric characters'
+    } else {
+      return validator.isAlphanumeric(value.replace(/[\s]+/, '')) ? '' : 'Must only contain alphabetic, numeric, and whitespace characters'
+    }
   }
 
   lowercase(value) {
