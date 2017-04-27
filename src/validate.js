@@ -7,7 +7,7 @@ import Schema from './Schema'
 const validate = (values, schema) => {
   if (!values) throw new Error('`values` must be supplied')
   if (!schema) throw new Error('`schema` must be supplied')
-  const rawSchema = schema instanceof Schema ? schema.get() : schema
+  const rawSchema = schema instanceof Schema ? schema.getSchema() : schema
   const allErrors = {}
 
   for (var key in rawSchema) {

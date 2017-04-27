@@ -1,5 +1,6 @@
 import validate from './validate'
 import _ from 'lodash'
+import { AnyRule } from './rules/Any'
 
 class Schema {
 
@@ -8,8 +9,19 @@ class Schema {
     this.internals = internals || {}
   }
 
-  get() {
+  getSchema() {
     return this.schema
+  }
+
+  fields(field) {
+    return this.schema[field]
+  }
+
+  update(schema) {
+    for (var field in schema) {
+      if (!(schema[field] instanceof AnyRule)) throw new Error('Updates to schema require fields to be instances of a type of rule.')
+      this.schema[field] = schema[field]
+    }
   }
 
   toJSON() {
