@@ -1,5 +1,7 @@
 import validator from 'validator'
 import { AnyRule, AnyValidator } from './Any'
+import { cleanObject } from '../helpers'
+
 
 /****************************************
   Rule Builder
@@ -16,53 +18,54 @@ class StringRule extends AnyRule {
     }
   }
 
-  setRule(ruleName, rule, options) {
+  setRule(ruleName, rule, options = {}) {
     if (typeof ruleName !== 'string') throw new Error('"ruleName" argument should be a string')
     return new StringRule(Object.assign({}, this.toJSON(), {
-      [ruleName]: (typeof options === 'undefined') ? rule : Object.assign({}, options, { rule })
+      [ruleName]: (!Object.keys(options).length) ? rule : Object.assign({}, options, { rule })
     }))
   }
 
   length(length, message) {
-    return this.setRule('length', length, { message })
+    return this.setRule('length', length, cleanObject({ message }))
   }
 
   maxLength(maxLength, message) {
-    return this.setRule('maxLength', maxLength, { message })
+    return this.setRule('maxLength', maxLength, cleanObject({ message }))
   }
 
   minLength(minLength, message) {
-    return this.setRule('minLength', minLength, { message })
+    return this.setRule('minLength', minLength, cleanObject({ message }))
   }
 
   regex(expression, message) {
     if (typeof expression === 'string') throw new Error('Expressions should be Expression Literals, not Strings')
     if (!(expression instanceof RegExp)) throw new Error('This is not a regular expression')
-    return this.setRule('regex', expression, { message })
+    return this.setRule('regex', expression, cleanObject({ message }))
   }
 
   email(message) {
-    return this.setRule('email', true, { message })
+    return this.setRule('email', true, cleanObject({ message }))
   }
 
   ascii(message) {
-    return this.setRule('ascii', true, { message })
+
+    return this.setRule('ascii', true, cleanObject({ message }))
   }
 
   alpha(strict = true, message) {
-    return this.setRule('alpha', true, { strict: !!strict, message })
+    return this.setRule('alpha', true, cleanObject({ strict: !!strict, message }))
   }
 
   alphaNum(strict = true, message) {
-    return this.setRule('alphaNum', true, { strict: !!strict, message })
+    return this.setRule('alphaNum', true, cleanObject({ strict: !!strict, message }))
   }
 
   lowercase(message) {
-    return this.setRule('lowercase', true, { message })
+    return this.setRule('lowercase', true, cleanObject({ message }))
   }
 
   uppercase(message) {
-    return this.setRule('uppercase', true, { message })
+    return this.setRule('uppercase', true, cleanObject({ message }))
   }
 
 }

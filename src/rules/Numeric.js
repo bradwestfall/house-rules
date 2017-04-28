@@ -1,6 +1,7 @@
 import validator from 'validator'
 import { AnyRule, AnyValidator } from './Any'
-import { isNumeric } from '../helpers'
+import { isNumeric, cleanObject } from '../helpers'
+
 
 /****************************************
   Rule Builder
@@ -17,10 +18,10 @@ class NumericRule extends AnyRule {
     }
   }
 
-  setRule(ruleName, rule, options) {
+  setRule(ruleName, rule, options = {}) {
     if (typeof ruleName !== 'string') throw new Error('"ruleName" argument should be a string')
     return new NumericRule(Object.assign({}, this.toJSON(), {
-      [ruleName]: (typeof options === 'undefined') ? rule : Object.assign({}, options, { rule })
+      [ruleName]: (!Object.keys(options).length) ? rule : Object.assign({}, options, { rule })
     }))
   }
 
@@ -32,27 +33,27 @@ class NumericRule extends AnyRule {
   }
 
   integer(message) {
-    return this.setRule('integer', true, { message })
+    return this.setRule('integer', true, cleanObject({ message }))
   }
 
   float(precision, message) {
-    return this.setRule('float', true, { precision, message })
+    return this.setRule('float', true, cleanObject({ precision, message }))
   }
 
   min(min, message) {
-    return this.setRule('min', this.toNumber(min), { message })
+    return this.setRule('min', this.toNumber(min), cleanObject({ message }))
   }
 
   max(max, message) {
-    return this.setRule('max', this.toNumber(max), { message })
+    return this.setRule('max', this.toNumber(max), cleanObject({ message }))
   }
 
   positive(message) {
-    return this.setRule('positive', true, { message })
+    return this.setRule('positive', true, cleanObject({ message }))
   }
 
   negative(message) {
-    return this.setRule('negative', true, { message })
+    return this.setRule('negative', true, cleanObject({ message }))
   }
 
 }

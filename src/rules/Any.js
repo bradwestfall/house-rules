@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import validator from 'validator'
-import { camelToLabel, isEmpty } from '../helpers'
+import { camelToLabel, isEmpty, cleanObject } from '../helpers'
 
 /****************************************
   Rule Builder
@@ -16,10 +16,10 @@ class AnyRule {
     this.rules = rules || {}
   }
 
-  setRule(ruleName, rule, options) {
+  setRule(ruleName, rule, options = {}) {
     if (typeof ruleName !== 'string') throw new Error('"ruleName" argument should be a string')
     return new AnyRule(Object.assign({}, this.toJSON(), {
-      [ruleName]: (typeof options === 'undefined') ? rule : Object.assign({}, options, { rule })
+      [ruleName]: (!Object.keys(options).length) ? rule : Object.assign({}, options, { rule })
     }))
   }
 
@@ -62,7 +62,7 @@ class AnyRule {
   }
 
   required(message) {
-    return this.setRule('required', true, { message })
+    return this.setRule('required', true, cleanObject({ message }))
   }
 
   optional() {
@@ -72,7 +72,7 @@ class AnyRule {
 
   in(possible, message) {
     if (!Array.isArray(possible)) throw new Error('"possible" must be an array')
-    return this.setRule('in', possible, { message })
+    return this.setRule('in', possible, cleanObject({ message }))
   }
 
 }

@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { camelToLabel, isNumeric, isEmpty } from '../src/helpers'
+import { camelToLabel, isNumeric, isEmpty, cleanObject } from '../src/helpers'
 
 describe('Helpers: camelToLabel', () => {
   it('should transform camelCase to "Label Case"', () => {
@@ -41,4 +41,19 @@ describe('Helpers: isEmpty', () => {
     expect(isEmpty(0)).to.be.false
   })
 
+})
+
+describe('Helpers: cleanObject', () => {
+  it('should remove properties with null or undefined values', () => {
+    expect(Object.keys(cleanObject({
+      a: 'a',
+      b: 1,
+      c: true,
+      d: false,
+      e: [],
+      f: {},
+      g: null,
+      h: undefined
+    })).join('')).to.equal('abcdef')
+  })
 })

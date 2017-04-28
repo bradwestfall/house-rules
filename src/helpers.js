@@ -19,4 +19,7 @@ const isEmpty = value => {
   )
 }
 
-export { camelToLabel, isNumeric, isEmpty }
+// Removes keys that have null or undefined values
+const cleanObject = object => _.pickBy(object, prop => (prop !== undefined && prop !== null))
+
+export { camelToLabel, isNumeric, isEmpty, cleanObject }
