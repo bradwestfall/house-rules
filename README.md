@@ -1,5 +1,7 @@
 # house-rules
 
+[![Build Status](https://travis-ci.org/bradwestfall/house-rules.svg?branch=master)](https://travis-ci.org/bradwestfall/house-rules)
+
 Create highly re-usable field/input validators for your project by chaining rules and creating an inventory of your project's common rules (called house rules). Then create sub-schemas for each validation context (like login or signup). Error messages are highly customizable at the rule level and field level.
 
 ## Install
