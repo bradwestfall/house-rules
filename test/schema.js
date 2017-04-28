@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { Is, Schema } from '../dist'
+import { Is, Schema } from '../src'
 
 describe('Schema Validation', () => {
 

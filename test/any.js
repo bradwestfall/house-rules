@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { Is, validate } from '../dist'
+import { Is, validate } from '../src'
 
 describe('Any Rules', () => {
 
