@@ -33,6 +33,7 @@ class Schema {
       if (!(schema[field] instanceof AnyRule)) throw new Error('Updates to schema require fields to be instances of a type of rule.')
       this.schema[field] = schema[field]
     }
+    return this
   }
 
   toJSON() {
