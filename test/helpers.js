@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { camelToLabel, isNumeric, isEmpty, cleanObject } from '../src/helpers'
+import { camelToLabel, isNumeric, isEmpty, cleanObject } from '../dist/helpers'
 
 describe('Helpers: camelToLabel', () => {
   it('should transform camelCase to "Label Case"', () => {

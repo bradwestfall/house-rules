@@ -172,9 +172,6 @@ class AnyValidator {
   }
 
   in(value, possible) {
-
-    console.log('INININ')
-
     const found = possible.findIndex(item => {
       if (item === value) return true
       if (item + '' === value + '') return true
