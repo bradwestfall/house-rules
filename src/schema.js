@@ -1,6 +1,8 @@
 import validate from './validate'
 import _ from 'lodash'
 import { AnyRule } from './rules/Any'
+import { NumericRule } from './rules/Numeric'
+import { StringRule } from './rules/String'
 
 class Schema {
 
@@ -13,9 +15,15 @@ class Schema {
     return this.schema
   }
 
-  fields(field) {
-    if (!(field in this.schema)) throw new Error('The supplied field "' + field + '" not found in schema')
-    return this.schema[field]
+  field(fieldName) {
+    if (!(fieldName in this.schema)) throw new Error('The supplied field "' + fieldName + '" not found in schema')
+    const field = this.schema[fieldName]
+    switch (true) {
+      case field instanceof NumericRule: return new NumericRule(field.toJSON())
+      case field instanceof StringRule:  return new StringRule(field.toJSON())
+      case field instanceof AnyRule:     return new AnyRule(field.toJSON())
+      default:
+    }
   }
 
   update(schema) {
