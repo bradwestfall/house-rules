@@ -14,6 +14,7 @@ class Schema {
   }
 
   fields(field) {
+    if (!(field in this.schema)) throw new Error('The supplied field "' + field + '" not found in schema')
     return this.schema[field]
   }
 
