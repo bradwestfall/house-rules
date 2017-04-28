@@ -19,8 +19,6 @@
   "author": "Brad Westfall",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.11.4",
     "babel-preset-es2015": "^6.5.0",
     "babel-preset-stage-2": "^6.3.13",
     "babel-register": "^6.24.1",
@@ -30,6 +28,8 @@
     "rimraf": "^2.6.1"
   },
   "dependencies": {
+    "babel-core": "^6.11.4",
+    "babel-cli": "^6.24.1",
     "validator": "^5.7.0"
   }
 }
