@@ -2,7 +2,7 @@
   "name": "house-rules",
   "version": "0.1.1",
   "description": "Chainable rules for input validation",
-  "main": "dist/commonjs/index.js",
+  "main": "dist/index.js",
   "repository": {
     "url": "https://github.com/bradwestfall/house-rules"
   },
@@ -11,9 +11,8 @@
   ],
   "scripts": {
     "prepublish": "npm run build",
-    "build": "npm run build:commonjs",
-    "build:commonjs": "npm run clean:commonjs && babel src --out-dir dist/commonjs",
-    "clean:commonjs": "rimraf dist/commonjs",
+    "clean": "rimraf dist",
+    "build": "npm run clean && babel src --out-dir dist",
     "sandbox": "babel-node sandbox/index.js",
     "test": "mocha test/**/**.js --compilers js:babel-core/register"
   },
