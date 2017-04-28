@@ -1,6 +1,6 @@
 {
   "name": "house-rules",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Chainable rules for input validation",
   "main": "dist/index.js",
   "repository": {
