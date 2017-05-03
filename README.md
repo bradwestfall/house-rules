@@ -22,7 +22,7 @@ const id = Is.numeric().positive().integer().required()
 const strict = false
 const name = Is.string().alpha(strict)
 
-// House Rules -- Imagine this could be a large schema for all the common rules in your project
+// House Rules -- Imagine this could be a large inventory/schema for all the common rules in your project
 const schema = new Schema({
 
   // Users
