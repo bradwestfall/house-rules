@@ -94,7 +94,7 @@ By default, error messages will be an array where each value is a message from a
   username: {
     label: 'Password',
     value: '♠♣♦♥',
-    errors: [ 'Password: Must only contain ASCII character', 'Must be at least 6 characters' ]
+    errors: [ 'Must only contain ASCII character', 'Must be at least 6 characters' ]
   }
 }
 ```
