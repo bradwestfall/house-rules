@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/bradwestfall/house-rules.svg?branch=master)](https://travis-ci.org/bradwestfall/house-rules)
 
-Create highly re-usable field/input validators for your project by chaining rules and creating an inventory of your project's common rules (called house rules). Then create sub-schemas for each validation context (like login or signup). Error messages are highly customizable at the rule level and field level.
+Create highly re-usable field/input validators for your project by chaining rules and creating an inventory of your project's common rules (a schema called your house rules). Then create sub-schemas for each validation context (like login or signup). Error messages are highly customizable at the rule level, the field level, or the group level.
 
 ## Install
 
@@ -22,7 +22,7 @@ const id = Is.numeric().positive().integer().required()
 const strict = false
 const name = Is.string().alpha(strict)
 
-// House Rules -- Imagine this could be a large schema for all the common rules in your project
+// House Rules -- Imagine this could be a large inventory/schema for all the common rules in your project
 const schema = new Schema({
 
   // Users
@@ -94,7 +94,7 @@ By default, error messages will be an array where each value is a message from a
   username: {
     label: 'Password',
     value: '♠♣♦♥',
-    errors: [ 'Password: Must only contain ASCII character', 'Must be at least 6 characters' ]
+    errors: [ 'Must only contain ASCII character', 'Must be at least 6 characters' ]
   }
 }
 ```
