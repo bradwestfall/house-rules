@@ -109,7 +109,7 @@ class StringValidator extends AnyValidator {
     if (options.strict) {
       return validator.isAlpha(value) ? '' : 'Must only contain alphabetic characters'
     } else {
-      return validator.isAlpha(value.replace(/[\s]+/, '')) ? '' : 'Must only contain alphabetic and whitespace characters'
+      return validator.isAlpha(value.replace(/[\s]+/g, '')) ? '' : 'Must only contain alphabetic and whitespace characters'
     }
   }
 
@@ -117,7 +117,7 @@ class StringValidator extends AnyValidator {
     if (options.strict) {
       return validator.isAlphanumeric(value) ? '' : 'Must only contain alphabetic or numeric characters'
     } else {
-      return validator.isAlphanumeric(value.replace(/[\s]+/, '')) ? '' : 'Must only contain alphabetic, numeric, and whitespace characters'
+      return validator.isAlphanumeric(value.replace(/[\s]+/g, '')) ? '' : 'Must only contain alphabetic, numeric, and whitespace characters'
     }
   }
 
