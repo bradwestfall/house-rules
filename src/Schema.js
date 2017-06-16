@@ -10,6 +10,7 @@ class Schema {
   constructor(schema, internals) {
     this.schema = schema || {}
     this.internals = internals || {}
+    this.validate = this.validate.bind(this)
   }
 
   getSchema() {
