@@ -63,4 +63,4 @@ class Schema {
 
 }
 
-export default Schema.bind(this)
+export default Schema.bind(Schema)
