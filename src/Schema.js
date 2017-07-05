@@ -3,7 +3,6 @@ import _ from 'lodash'
 import { AnyRule } from './rules/Any'
 import { NumericRule } from './rules/Numeric'
 import { StringRule } from './rules/String'
-import { clone } from './helpers'
 
 class Schema {
 
@@ -20,7 +19,7 @@ class Schema {
   field(fieldName) {
     if (!(fieldName in this.schema)) throw new Error('The supplied field "' + fieldName + '" not found in schema')
     const field = this.schema[fieldName]
-    const fieldJSON = clone(field.toJSON())
+    const fieldJSON = _.cloneDeep(field.toJSON())
     switch (true) {
       case field instanceof NumericRule: return new NumericRule(fieldJSON)
       case field instanceof StringRule:  return new StringRule(fieldJSON)
