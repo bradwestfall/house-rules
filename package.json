@@ -10,7 +10,7 @@
     "validation"
   ],
   "scripts": {
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "clean": "rimraf dist",
     "build": "npm run clean && babel src --out-dir dist",
     "sandbox": "babel-node sandbox/index.js",
