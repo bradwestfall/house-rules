@@ -55,10 +55,26 @@ class Schema {
 
   clone(fields = []) {
     if (!Array.isArray(fields)) throw new Error('argument supplied for fields must be an array')
-    fields.forEach(field => {
-      if (!(field in this.schema)) throw new Error('The supplied field "' + field + '" not found in schema')
+
+    const optionalFields = {}
+    const requiredFields = {}
+
+    // Isolate an array of fields to use for the sub-schema and
+    // create update objects for optional and required fields
+    fields = fields.map(field => {
+      const parts = field.split(':')
+      if (parts.length === 2) {
+        if (['o', 'opt', 'optional'].includes(parts[0])) optionalFields[parts[1]] = this.field(parts[1]).optional()
+        if (['r', 'req', 'required'].includes(parts[0])) requiredFields[parts[1]] = this.field(parts[1]).required()
+      }
+      return parts[1] || parts[0]
     })
-    return new Schema(_.pick(this.schema, fields), Object.assign({}, this.internals))
+
+    // Create a new based on the fields
+    const newSchema = new Schema(_.pick(this.schema, fields), Object.assign({}, this.internals))
+    newSchema.update(optionalFields)
+    newSchema.update(requiredFields)
+    return newSchema
   }
 
 }
