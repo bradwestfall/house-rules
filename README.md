@@ -29,6 +29,7 @@ const schema = new Schema({
   userId: id.label('User ID'),
   firstName: name.label('First Name'),
   lastName: name.label('Last Name'),
+  birthDate: Is.date('MM-DD-YYYY').beforeToday().label('Birth Date'),
   email: Is.string().email().required(),
   password: Is.string().minLength(8).maxLength(100).required(),
   userTypeId: Is.numeric().in([1, 2, 3]).required(),
