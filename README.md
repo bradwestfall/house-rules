@@ -292,16 +292,90 @@ Requires the number to be an float. Note that the number `1` (without decimal pl
 
 #### `.min(integer minValue, [string message])`
 
-Requires the number to be equal or above the `minValue`
+Requires the number to be equal or above the `minValue`.
 
 #### `.max(integer maxValue, [string message])`
 
-Requires the number to be equal or below the `maxValue`
+Requires the number to be equal or below the `maxValue`.
 
 #### `.positive([string message])`
 
-Requires the number to be above `0`
+Requires the number to be above `0`.
 
 #### `.negative([string message])`
 
-Requires the number to be below `0`
+Requires the number to be below `0`.
+
+
+
+## `Is.date(string format)`
+
+Rules declared with `Is.date()` can use all of the following methods, plus any of the rules from the `Is.any()` set of methods. `house-rules` uses [MomentJS](https://momentjs.com) to verify dates are real. `Is.date(format)` requires a format (a Moment format) which is used to declare the format that values should be expected in. For example:
+
+```js
+const schema = new Schema({
+  birthDate: Is.date('MM-DD-YYYY')
+})
+
+schema.validate({ birthDate: '11-14-1982' }) // valid
+schema.validate({ birthDate: '11/14/1982' }) // invalid
+schema.validate({ birthDate: '1982-11-14' }) // invalid
+```
+
+#### `.isSame(string date, [string message])`
+
+Requires the value to be the same as `date`.
+
+> See Notes Below.
+
+#### `.isSameOrBefore(string date, [string message])`
+
+Requires the value to be the same or before `date`.
+
+> See Notes Below.
+
+#### `.isSameOrAfter(string date, [string message])`
+
+Requires the value to be the same or after `date`.
+
+> See Notes Below.
+
+#### `.isBefore(string beforeDate, [string message])`
+
+Requires the value to be before `beforeDate`.
+
+> See Notes Below.
+
+#### `.isBeforeToday([string message])`
+
+Requires the value to be before today.
+
+> See Notes Below.
+
+#### `.isAfter(string afterDate, [string message])`
+
+Requires the value to be after `afterDate`.
+
+> See Notes Below.
+
+#### `.isAfterToday([string message])`
+
+Requires the value to be after today.
+
+> See Notes Below.
+
+### Notes on previous statements
+
+When providing a `format` to `Is.date(format)`, you're indicating the format you expect the value to be in. However, for the other methods after `.date()` which take date arguments, the format always needs to be in `YYYY-MM-DD` format.
+
+In doing comparisons, Moment is smart enough to figure out formats. So for example, when we say that `isSame` requires the value to be the same as the provided date, notice that these are considered the same:
+
+```js
+const schema = new Schema({
+  myDate: Is.date('MM/DD/YYYY').isSame('2000-01-01')
+})
+
+schema.validate({ myDate: '01/01/2000' }) // valid (same)
+```
+
+These two dates, even though they are written in a different format, are the same. Again, the value we provide is `01/01/2000` and must match our format `MM/DD/YYYY`, but we must express the arguments into `isSame` as `YYYY-MM-DD`.

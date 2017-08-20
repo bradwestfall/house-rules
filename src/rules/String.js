@@ -19,7 +19,7 @@ class StringRule extends AnyRule {
   }
 
   setRule(ruleName, rule, options = {}) {
-    if (typeof ruleName !== 'string') throw new Error('"ruleName" argument should be a string')
+    if (typeof ruleName !== 'string') throw new Error('`ruleName` argument should be a string')
     return new StringRule(Object.assign({}, this.toJSON(), {
       [ruleName]: (!Object.keys(options).length) ? rule : Object.assign({}, options, { rule })
     }))

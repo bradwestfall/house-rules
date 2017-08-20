@@ -19,7 +19,7 @@ class NumericRule extends AnyRule {
   }
 
   setRule(ruleName, rule, options = {}) {
-    if (typeof ruleName !== 'string') throw new Error('"ruleName" argument should be a string')
+    if (typeof ruleName !== 'string') throw new Error('`ruleName` argument should be a string')
     return new NumericRule(Object.assign({}, this.toJSON(), {
       [ruleName]: (!Object.keys(options).length) ? rule : Object.assign({}, options, { rule })
     }))
@@ -27,7 +27,7 @@ class NumericRule extends AnyRule {
 
   toNumber(n) {
     const coersedNumber = n + ''
-    if (!isNumeric(coersedNumber)) throw new Error('toNumber() expects a numeric string. ' + n + ' was given.')
+    if (!isNumeric(coersedNumber)) throw new Error('`toNumber()`` expects a numeric string. ' + n + ' was given.')
     if (validator.isInt(coersedNumber)) return validator.toInt(coersedNumber)
     if (validator.isFloat(coersedNumber)) return validator.toFloat(coersedNumber)
   }

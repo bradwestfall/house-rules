@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { AnyRule } from './rules/Any'
 import { NumericRule } from './rules/Numeric'
 import { StringRule } from './rules/String'
+import { DateRule } from './rules/Date'
 
 class Schema {
 
@@ -23,6 +24,7 @@ class Schema {
     switch (true) {
       case field instanceof NumericRule: return new NumericRule(fieldJSON)
       case field instanceof StringRule:  return new StringRule(fieldJSON)
+      case field instanceof DateRule:    return new DateRule(fieldJSON)
       case field instanceof AnyRule:     return new AnyRule(fieldJSON)
       default:
     }

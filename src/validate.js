@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { AnyRule, AnyValidator } from './rules/Any'
 import { NumericRule, NumericValidator } from './rules/Numeric'
 import { StringRule, StringValidator } from './rules/String'
+import { DateRule, DateValidator } from './rules/Date'
 import Schema from './Schema'
 
 const validate = (values, schema) => {
@@ -23,6 +24,11 @@ const validate = (values, schema) => {
     } else if (rules instanceof StringRule) {
       const stringValidator = new StringValidator(rules)
       errors = stringValidator.check(key, values[key])
+
+    // Date
+    } else if (rules instanceof DateRule) {
+      const dateValidator = new DateValidator(rules)
+      errors = dateValidator.check(key, values[key])
 
     // Any (must go last since technichally all the rules are instances of AnyRule)
     } else if (rules instanceof AnyRule) {

@@ -17,7 +17,7 @@ class AnyRule {
   }
 
   setRule(ruleName, rule, options = {}) {
-    if (typeof ruleName !== 'string') throw new Error('"ruleName" argument should be a string')
+    if (typeof ruleName !== 'string') throw new Error('`ruleName` argument should be a string')
     return new AnyRule(Object.assign({}, this.toJSON(), {
       [ruleName]: (!Object.keys(options).length) ? rule : Object.assign({}, options, { rule })
     }))
@@ -43,13 +43,13 @@ class AnyRule {
 
   // Use a "catch-all" message that overrides all other messages
   message(message) {
-    if (typeof message !== 'string') throw new Error('"message" should be a string')
+    if (typeof message !== 'string') throw new Error('`message` should be a string')
     return this.setRule('message', message)
   }
 
   // Custom Labels
   label(label) {
-    if (typeof label !== 'string') throw new Error('"label" should be a string')
+    if (typeof label !== 'string') throw new Error('`label` should be a string')
     return this.setRule('label', label)
   }
 
@@ -71,7 +71,7 @@ class AnyRule {
   }
 
   in(possible, message) {
-    if (!Array.isArray(possible)) throw new Error('"possible" must be an array')
+    if (!Array.isArray(possible)) throw new Error('`possible` must be an array')
     return this.setRule('in', possible, cleanObject({ message }))
   }
 
