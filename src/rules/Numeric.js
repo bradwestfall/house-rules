@@ -90,11 +90,11 @@ class NumericValidator extends AnyValidator {
   }
 
   min(value, rule) {
-    return this.minMaxChecker(value + '', { min: rule }) ? '' : 'Must me bigger than ' + rule
+    return this.minMaxChecker(value + '', { min: rule }) ? '' : `The smallest value allowed is ${rule}`
   }
 
   max(value, rule) {
-    return this.minMaxChecker(value + '', { max: rule }) ? '' : 'Must me smaller than ' + rule
+    return this.minMaxChecker(value + '', { max: rule }) ? '' : `The largest value allowed is ${rule}`
   }
 
   positive(value) {
