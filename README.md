@@ -169,7 +169,7 @@ console.log( schema.validate({ password: '♠♣♦♥' }) ) // "there were erro
 
 # Rule API
 
-All rules must start out by declaring `Is.string()`, `Is.numeric()`, or `Is.any()`. Once declared a rule cannot change from one type to another.
+All rules must start out by declaring `Is.string()`, `Is.numeric()`, `Is.date()`, or `Is.any()`. Once declared a rule cannot change from one type to another.
 
 ## `Is.any()`
 
